@@ -24,7 +24,7 @@ Besides, there aren't a lot of pink themes, that doesn't try to be overly "cute"
 What you see is 5 months of on and off work, and tweaking, to get something that works for me, and my workflow as a technical and creative person. Most of the work was just on the desktop layout, as the colouring and icons were almost decided on from the get-go.
 
 Depending on what I'll do on my Linux journey, this theme only covers my personal preferences for KDE Plasma, so if you want to use these, you should get that desktop environment first.
-## Showcase and Images: 
+## Rice showcase: 
 havent made it yet
 ## Auto Install script
 i havent set it up yet, but i do want support for the big 3 base distros, not sure about the rest
