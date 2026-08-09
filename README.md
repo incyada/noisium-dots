@@ -38,7 +38,6 @@ These are the things that I used to make this theme possible. Not all of them ca
 | Plasma Style | Plasmorphism, but modified |
 | Window Decoration | Loosely based on Dexy Colour, with title bar-less variant |
 | Icon Theme | Tela, with KDE folder colours |
-| Cursor Theme | Familiar Pixel Cursors, but ported, with a custom-made cross and beam icon (might think on how ill have to do this one) |
 | System Sounds | Modern Minimal UI |
 | Splash screen | Modified Fedora Minimalistic |
 | Login Screen | Silent and SDDM |
