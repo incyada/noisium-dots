@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg viewBox="0 0 50 50"
+ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" baseProfile="tiny">
+<title>Qt SVG Document</title>
+<desc>Generated with Qt</desc>
+<defs>
+</defs>
+<g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
+
+<g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+</g>
+
+<g fill="#ffadf2" fill-opacity="1" stroke="none" transform="matrix(0.0313676,0,0,0.0400239,-25.5553,44.946)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+opacity="0.603922" >
+<path vector-effect="none" fill-rule="evenodd" d="M883.086,-616.093 C883.086,-858.273 1077.66,-1054.6 1317.69,-1054.6 L1905.72,-1054.6 C2145.74,-1054.6 2340.32,-858.273 2340.32,-616.093 L2340.32,-380.614 C2340.32,-138.435 2145.74,57.891 1905.72,57.891 L1317.69,57.891 C1077.66,57.891 883.086,-138.435 883.086,-380.614 L883.086,-616.093 Z "/>
+</g>
+
+<g fill="none" stroke="#ffadf2" stroke-opacity="1" stroke-width="136.765" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="matrix(0.0313676,0,0,0.0400239,-25.5553,44.946)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+<path vector-effect="none" fill-rule="evenodd" d="M883.086,-616.093 C883.086,-858.273 1077.66,-1054.6 1317.69,-1054.6 L1905.72,-1054.6 C2145.74,-1054.6 2340.32,-858.273 2340.32,-616.093 L2340.32,-380.614 C2340.32,-138.435 2145.74,57.891 1905.72,57.891 L1317.69,57.891 C1077.66,57.891 883.086,-138.435 883.086,-380.614 L883.086,-616.093 Z "/>
+</g>
+
+<g fill="#232629" fill-opacity="1" stroke="none" transform="matrix(1.29741e-06,0.0400237,-0.0313676,-2.24546e-07,-57.879,44.7199)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+<rect x="-486.422" y="-2650.49" width="282.227" height="83.2405"/>
+</g>
+
+<g fill="#232629" fill-opacity="1" stroke="none" transform="matrix(-0.0313676,1.65514e-06,1.76015e-07,-0.0400237,-57.879,44.7199)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+<rect x="-2650.3" y="402.933" width="282.227" height="83.2253"/>
+</g>
+
+<g fill="#232629" fill-opacity="1" stroke="none" transform="matrix(0.0313676,-1.65514e-06,-1.76015e-07,0.0400237,-57.879,44.7199)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+<rect x="2653.98" y="-562.102" width="282.227" height="83.2253"/>
+</g>
+
+<g fill="#232629" fill-opacity="1" stroke="none" transform="matrix(-1.29718e-06,-0.0400237,0.0313676,2.24587e-07,-57.879,44.7199)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+<rect x="479.388" y="2653.9" width="282.227" height="83.2253"/>
+</g>
+
+<g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
+font-family="Pixelify Sans" font-size="12" font-weight="400" font-style="normal" 
+>
+</g>
+</g>
+</svg>
