@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "Incyada"
+            }
+        ],
+        "Description": "Global theme for the cocoa cakes",
+        "Id": "Blackberry Noisium",
+        "License": ":GPLv3",
+        "Name": "Blackberry Noisium",
+        "Website": ""
+    },
+    "Keywords": "Desktop;Workspace;Appearance;Look and Feel;",
+    "X-Plasma-APIVersion": "2",
+    "X-Plasma-MainScript": "default"
+}

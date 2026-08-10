@@ -1,0 +1,11 @@
+i only need this in order to track where files/folders go for the script
+
+but, once thats done, ill replace it with this: these are roughly the directories in which you will have to place the folders, should you choose to import these dotfiles manually
+i know i could do it in a better way, but this increases readability, and if you are downloading dots, you are atr the very least familiar with linux/unix's (not macos) file structure by a decent bit
+
+-- plasma, color-scheme, wallpapers & konsole: ~/.local/share
+--start bloom: ~/.local/share/icons/hicolor/512x512/app
+-- configs: you wont believe this
+-- aurorare-themes: place contents inside of ~/.local/share/aurorae/themes, will have to rename or copy the themes specifically in a non destructive way, probably through willcard
+-- silent-sddm: ~/usr/share/sddm/themes/silent
+-- rounded corner settings: append it to ~/.config/kwinrc

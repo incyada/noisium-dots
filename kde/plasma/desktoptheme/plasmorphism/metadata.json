@@ -1,0 +1,19 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "PPND1364"
+            }
+        ],
+        "Category": "Plasma Theme",
+        "Description": "Plasmorphism by the PPND1364, and modified by Incyada, a dark and modern theme made from the 'Breeze' and the 'Darkly' themes.",
+        "EnabledByDefault": true,
+        "Id": "plasmorphism",
+        "License": "GPLv2",
+        "Name": "Plasmorphism",
+        "Version": "1.2.34",
+        "Website": ""
+    },
+    "X-Plasma-API": "5.0"
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Noisium (Titleless)
+Type=Application
+
+X-KDE-PluginInfo-Author=Incyada
+X-KDE-PluginInfo-Name=noisium-titleless
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=GPL_V3
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-blur=false
