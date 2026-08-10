@@ -1,0 +1,103 @@
+// made by incyada
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+  //configure custom logo
+  "logo": {
+    "type": "file",
+    //cant use "~" to refer to the home folder
+    "source": "/home/incyada/Pictures/logo-ascii.txt",
+    "padding": {
+      "right": 3
+    },
+    "color": {
+      //could force magenta as the only color for fastfetch, but using this forces it to be that color only, no matter the theme
+      "1": "#ffadf2"
+    }
+  },
+  //seperates the logo from the contents with an empty space
+  "display": {
+    "separator": "",
+    "color": {
+      //helps prevent copying the same thing over and over again
+        "keys": "#ffadf2",
+        "title": "#ffffff"
+    },
+    "key": {
+      "width": 7
+    }
+  },
+  "modules": [
+    //empty space
+    "break",
+    //adds a custom, editable entry
+    {
+      "key": "- Don't you think you've riced enough?",
+      "keyColor": "38",
+      "type": "custom"
+    },
+    "break",
+    {
+      "type": "custom",
+      "key": "╔═══╗"
+    },
+    {
+      "type": "title",
+      "key": "║  ║"
+    },
+    {
+      "type": "os",
+      //dont worry about them looking empty
+      "key": "║  ║"
+    },
+    {
+      "type": "kernel",
+      //{icon} reffers to the default logo to use for that section, the rest is painful copy-pasting
+      "key": "║  ║"
+    },
+    {
+      "type": "host",
+      "key": "║ 󰌢 ║"
+    },
+    {
+      "type": "uptime",
+      "key": "║  ║"
+    },
+    {
+      "type": "shell",
+      "key": "║  ║"
+    },
+    {
+      "type": "de",
+      "key": "║  ║"
+    },
+    {
+      "type": "terminal",
+      "key": "║  ║"
+    },
+    {
+      "type": "cpu",
+      "key": "║  ║"
+    },
+    {
+      "type": "gpu",
+      "key": "║ 󰾲 ║"
+    },
+    {
+      "type": "memory",
+      "key": "║  ║"
+    },
+    {
+      "type": "disk",
+      "key": "║ 󰋊 ║"
+    },
+    {
+      "key": "║ 󰏘 ║",
+      "type": "colors",
+      "symbol": "square"
+    },
+    {
+      "type": "custom",
+      "key": "╚═══╝"
+    }
+  ]
+}
