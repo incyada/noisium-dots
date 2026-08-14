@@ -5,7 +5,7 @@
   "logo": {
     "type": "file",
     //cant use "~" to refer to the home folder
-    "source": "/home/incyada/Pictures/logo-ascii.txt",
+    "source": "/home/incyada/.config/fastfetch/logo-ascii.txt",
     "padding": {
       "right": 3
     },
@@ -31,73 +31,67 @@
     "break",
     //adds a custom, editable entry
     {
-      "key": "- Don't you think you've riced enough?",
-      "keyColor": "38",
-      "type": "custom"
-    },
-    "break",
-    {
       "type": "custom",
-      "key": "╔═══╗"
+      "key": "╭───╮"
     },
     {
       "type": "title",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "os",
       //dont worry about them looking empty
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "kernel",
       //{icon} reffers to the default logo to use for that section, the rest is painful copy-pasting
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "host",
-      "key": "║ 󰌢 ║"
+      "key": "│ 󰌢 │"
     },
     {
       "type": "uptime",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "shell",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "de",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "terminal",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "cpu",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "gpu",
-      "key": "║ 󰾲 ║"
+      "key": "│ 󰾲 │"
     },
     {
       "type": "memory",
-      "key": "║  ║"
+      "key": "│  │"
     },
     {
       "type": "disk",
-      "key": "║ 󰋊 ║"
+      "key": "│ 󰋊 │"
     },
     {
-      "key": "║ 󰏘 ║",
+      "key": "│ 󰏘 │",
       "type": "colors",
-      "symbol": "square"
+      "symbol": "star"
     },
     {
       "type": "custom",
-      "key": "╚═══╝"
+      "key": "╰───╯"
     }
   ]
 }
