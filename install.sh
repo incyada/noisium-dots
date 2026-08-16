@@ -6,7 +6,7 @@
 # 5. auto-create any folders that arent there for the installation
 # # folders needed: ~/.local/share/icons/hicolor/512x512/app, ~/.local/share/aurorae/themes, ~/.local/share/kwin/scripts
 # 6. replace instances of my name (incyada) to $USER
-# 7. check if the device has battery, why? cause not everyone has a laptop
+# 7. check if the device has battery, why? cause not everyone has a laptop (use ls /sys/class/power_supply/BAT* and see if it doesnt error out)
 # 8. lots of manual copy-pasting
 
 # you can replace strings by changing its value later down the line, just like python, thank god

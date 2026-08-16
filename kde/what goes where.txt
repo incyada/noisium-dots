@@ -9,5 +9,4 @@ i know i could do it in a better way, but this increases readability, and if you
 --- although, for the plasmashell file, that stores the whole thing, id have to replace each instance of my username (incyada) with the user's actual name (can use $USER for this)
 -- aurorare-themes: place contents inside of ~/.local/share/aurorae/themes, will have to rename or copy the themes specifically in a non destructive way, probably through willcard
 -- silent-sddm: ~/usr/share/sddm/themes/silent
--- rounded corner settings: append it to ~/.config/kwinrc
 -- dynamic padding: ~/.local/share/kwin/scripts
