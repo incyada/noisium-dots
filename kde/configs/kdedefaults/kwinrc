@@ -1,0 +1,7 @@
+[TabBox]
+LayoutName=thumbnail_grid
+
+[org.kde.kdecoration2]
+NoPlugin=false
+library=org.kde.kwin.aurorae.v2
+theme=__aurorae__svg__noisium
