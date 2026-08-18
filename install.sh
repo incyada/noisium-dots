@@ -69,8 +69,15 @@ function pkg_manager_check() {
     # on arch, will have to check if yay or paru is installed rather than pacman... will have to install some AUR packages
     # there is acleaner way of doing this check, without another if statement, but i havent unlocked that yet
     elif command -v paru yay > /dev/null 2>&1; then
+        # saving the aur helper that will be used
+        if command -v paru > /dev/null 2>&1; then
+            aur_helper=paru
+        else
+            aur_helper=yay
+        fi
         echo "DISTRO BASE FOUND: ARCH"
         echo "Using pacman as the package manager..."
+        echo "AUR Helper: $aur_helper"
         pkg_manager="rtfm"
     elif command -v pacman > /dev/null 2>&1; then
         echo "DISTRO BASE FOUND: ARCH"
@@ -103,3 +110,100 @@ function repo_update_time() {
     fi
 }
 repo_update_time
+
+# installing system packages
+function packages_installation() {
+    echo "4. Installing needed system packages"
+    if [ "${pkg_manager}" = "redhatslop" ]; then
+        # looks pretty unreadable, but i did my best to make it the opposite
+        echo "Installing Darkly..."
+        echo "command executed: sudo dnf copr enable deltacopy/darkly -y"
+        sudo dnf copr enable deltacopy/darkly -y
+        echo "command executed: sudo dnf install darkly -y"
+        sudo dnf install darkly -y
+
+        echo ""
+        echo "Installing Rounded corners effect..."
+        echo "command executed: sudo dnf copr enable matinlotfali/KDE-Rounded-Corners -y"
+        sudo dnf copr enable matinlotfali/KDE-Rounded-Corners -y
+        echo "command executed: sudo dnf install kwin-effect-roundcorners -y"
+        sudo dnf install kwin-effect-roundcorners -y
+
+        echo ""
+        echo "Installing Better Blur DX..."
+        echo "command executed: sudo dnf copr enable infinality/kwin-effects-better-blur-dx -y"
+        sudo dnf copr enable infinality/kwin-effects-better-blur-dx -y
+        echo "command executed: sudo dnf install kwin-effects-better-blur-dx -y"
+        sudo dnf install kwin-effects-better-blur-dx -y
+
+        echo ""
+        echo "Installing Konsole (if its not there there)"
+        echo "command executed: sudo dnf install konsole -y"
+        sudo dnf install konsole -y
+
+        echo ""
+        echo "Cooking some fresh fish (if its not there there)"
+        echo "If you dont want fish, then you can delete it after the dots are installing"
+        echo "command executed: sudo dnf install fish -y"
+        sudo dnf install fish -y
+    elif [ "${pkg_manager}" = "rtfm" ]; then
+        # arch is much simpler though, as coprs dont have to be added beforehand
+        echo "Installing Darkly..."
+        # as an arch user myself (well artix, to be exact), these flags just means that the package will be install if its not there and will not ask for confirmation, usually
+        echo "command executed: sudo $aur_helper darkly-bin --needed --noconfirm"
+        sudo $aur_helper darkly-bin --needed --noconfirm
+
+        echo ""
+        echo "Installing Rounded corners effect..."
+        echo "command executed: sudo $aur_helper kwin-effect-rounded-corners --needed --noconfirm"
+        sudo $aur_helper kwin-effect-rounded-corners --needed --noconfirm
+
+        echo ""
+        echo "Installing Better Blur DX..."
+        echo "command executed: sudo $aur_helper kwin-effects-better-blur-dx --needed --noconfirm"
+        sudo $aur_helper kwin-effects-better-blur-dx --needed --noconfirm
+
+        echo ""
+        echo "Installing Konsole (if its not there there)"
+        echo "command executed: sudo pacman -S konsole --needed --noconfirm"
+        sudo pacman -S konsole --needed --noconfirm
+
+        echo ""
+        echo "Cooking some fresh fish (if its not there there)"
+        echo "If you dont want fish, then you can delete it after the dots are installing"
+        echo "command executed: sudo pacman -S fish --needed --noconfirm"
+        sudo pacman -S fish --needed --noconfirm
+    else
+        echo "Debian-based has been skipped for now as not all of the packages are available as ppa (plus i want to work with vanilla debian, so any of ubuntu conveniences will be skipped)"
+        # this one is more complicated due to... well its debian, and its not known for being new
+        # use curl instead, but will be once i get there: https://github.com/Bali10050/Darkly/releases/download/v0.5.38/darkly-0.5.38_debian14_amd64.deb
+        # install the following packages first: sudo apt install -y git cmake g++ extra-cmake-modules qt6-tools-dev kwin-dev libkf6configwidgets-dev gettext libkf6crash-dev libkf6globalaccel-dev libkf6kio-dev libkf6service-dev libkf6notifications-dev libkf6kcmutils-dev libkdecorations3-dev libxcb-composite0-dev libxcb-randr0-dev libxcb-shm0-dev libxcb-res0-dev libxcb-sync-dev qt6-base-private-dev qt6-base-dev-tools libdrm-dev
+
+        # build script for better-blur-dx (i dont know how to remove it though)
+        # git clone https://github.com/xarblu/kwin-effects-better-blur-dx
+        # cd kwin-effects-better-blur-dx
+        # chmod +x build.sh
+        # ./build.sh
+
+        # build scipt for rounded corners (samw thing)
+        # git clone https://github.com/matinlotfali/KDE-Rounded-Corners
+        # cd KDE-Rounded-Corners
+        # mkdir build
+        # cd build
+        # cmake ..
+        # cmake --build . -j
+        # sudo make install
+
+        echo ""
+        echo "Installing Konsole (if its not there there)"
+        echo "command executed: sudo apt install konsole -y"
+        sudo apt install konsole -y
+
+        echo ""
+        echo "Cooking some fresh fish (if its not there there)"
+        echo "If you dont want fish, then you can delete it after the dots are installing"
+        echo "command executed: sudo apt install fish -y"
+        sudo apt install fish -y
+    fi
+}
+packages_installation

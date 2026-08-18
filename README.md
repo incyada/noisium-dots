@@ -34,7 +34,8 @@ These are the things that I used to make this theme possible. Not all of them ca
 | Theme Asset | Original source |
 | - | - |
 | Colours | Custom-made |
-| Application Style | Darkly |
+| QT Style | Darkly |
+| GTK Style | Darkly GTK port (pregenerated theme included) |
 | Plasma Style | Plasmorphism, but modified |
 | Window Decoration | Loosely based on Dexy Colour, with title bar-less variant |
 | Icon Theme | Tela, with KDE folder colours |
