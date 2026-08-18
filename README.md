@@ -44,7 +44,7 @@ These are the things that I used to make this theme possible. Not all of them ca
 | Login Screen | Silent and SDDM |
 | System Font | Pixelify Sans |
 | Main Desktop Effects | Rounded Corners and Better Blur DX |
-| Custom Widgets | Panel Colorizer, Kara, quickclock, KDE Control Station and Better Battery widgets |
+| Custom Widgets | Panel Colorizer, Kara, quickclock, KDE Control Station, Advanced Weather Widget and Better battery widget |
 | Kwin scripts | Polonium, Dynamic workspaces, and Dynamic Padding (custom-made) |
 | Terminal Emulator | Konsole (no seriously) |
 | Terminal Font | Monocraft |

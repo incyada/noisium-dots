@@ -3,8 +3,10 @@
 # DONE:
 # 1. backup all replaced files
 # 2. update repos and check which package manager is on the system (paru, yay, dnf, or apt)
+# 3. auto-check needed packages first, then install them (skipped apt for now, and would refactor fedora installs a bit)
+# TODO NEXT TIME: switch to kwin install depending on what is being installed and only install file if it contain .plasmoid or .kwinscript in it
+
 # NOT STARTED YET:
-# 3. auto-check needed packages first, then install them
 # 4. install extensions needed (do want to support the projects at hand, although, im not sure how easy it will be)
 # 5. auto-create any folders that arent there for the installation
 # # folders needed: ~/.local/share/icons/hicolor/512x512/app, ~/.local/share/aurorae/themes, ~/.local/share/kwin/scripts
@@ -14,7 +16,8 @@
 
 # solid intro
 # made this a function for simplicity sake
-function script_intro() {
+# actually, this whole file is just functions
+script_intro() {
     # not sure if multiple lines will slow things down for systems that are pretty slow
     echo "* * NOISIUM DOTS TUI INSTALLER * *"
     echo "Welcome to the Noisium dots TUI installer!"
@@ -32,26 +35,20 @@ function script_intro() {
     echo "- In some cases, sudo will appear in order to install certain packages for this theme. If you arent comfortable with that, you can exit right away (CTRL + C)."
     read -p "The next time you press enter, the script will create a backup of the most important files, and start installing itself. To accept and start, press enter: " enter
 }
-# i guess now we can call it
-# oh, also i have to do this each time i finish writing a function
-# cant have the function ran immediatelly after, cause this script cant do that, for some reason
-script_intro
 
 echo ""
 echo "- alright then, lets begin!"
 # backup user files and folders to another directory, incase something does goes wrong
-function data_backup() {
+data_backup() {
     echo "1. Backing up user data (for extra mesure)..."
     ""
     cp -r ~/.config ~./.config-backup
     cp -r ~/.local/share ~/.local/share-backup
 }
-# this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
-# data_backup
 
 # package check via package manager
 # quite weird, but makes things less error prone
-function pkg_manager_check() {
+pkg_manager_check() {
     # basic if else chain that checks for the right package manager
     echo "2. Checking what distro this is through the package manager..."
     echo ""
@@ -89,10 +86,9 @@ function pkg_manager_check() {
         exit 1
     fi
 }
-pkg_manager_check
 
 # update repositories
-function repo_update_time() {
+repo_update_time() {
     echo "3. Updating repositories, but not updating packages"
     echo "[NOTE]: You will be asked to input your password here, as package list updates are ususally like that."
     echo ""
@@ -109,11 +105,13 @@ function repo_update_time() {
         sudo apt update
     fi
 }
-repo_update_time
 
 # installing system packages
-function packages_installation() {
+# i have an idea, and its just to turn all of these entries into functions, rather than hardcoded commands
+# ill reserve this at the end of the script
+packages_installation() {
     echo "4. Installing needed system packages"
+    echo ""
     if [ "${pkg_manager}" = "redhatslop" ]; then
         # looks pretty unreadable, but i did my best to make it the opposite
         echo "Installing Darkly..."
@@ -206,4 +204,77 @@ function packages_installation() {
         sudo apt install fish -y
     fi
 }
-packages_installation
+
+# installing other extensions through curl
+# before that though...
+notwaybar() {
+    # ill install panel colorizer and kara first, as they have to be built first (well, one works without, but it is better with a compiled plugin)
+    # dependencies first
+    echo "Installing dependencies first..."
+    echo "the list is long, so ill spare you the details"
+    if [ "$pkg_manager" = "redhatslop" ]; then
+        sudo dnf install -y git gcc-c++ cmake extra-cmake-modules libplasma-devel kf6-kcoreaddons-devel spectacle python3 python3-dbus python3-gobject gettext g++ qt6-qtbase-dev qt6-qtdeclarative-devel kf6-ki18n-devel kf6-kservice-devel kf6-kwindowsystem-devel libplasma-devel plasma-activities-devel kwin-devel wayland-devel libepoxy-devel libdrm-devel plasma-workspace-devel kf6-kitemmodels-devel
+    elif [ "$pkg_manager" = "rtfm" ]; then
+        sudo pacman -S git gcc cmake extra-cmake-modules libplasma spectacle python python-dbus python-gobject gettext base-devel qt6-base qt6-declarative kwin plasma-activities plasma-workspace --needed --noconfirm
+    else
+        sudo apt install -y git build-essential cmake extra-cmake-modules libplasma-dev kde-spectacle python3 python3-dbus python3-gi gettext cmake build-essential qt6-declarative-dev extra-cmake-modules qt6-base-dev libkf6i18n-dev libkf6service-dev libkf6windowsystem-dev plasma-workspace-dev libplasmaactivities-dev kwin-dev pkg-config libdrm-dev
+    fi
+    # compile widgets
+    git clone https://github.com/luisbocanegra/plasma-panel-colorizer
+    cd plasma-panel-colorizer
+    ./install.sh
+    cd ../
+    rm -rf plasma-panel-colorizer
+    git clone https://github.com/dhruv8sh/kara.git
+    cd kara
+    ./install.sh
+    cd ../
+    rm -rf kara
+}
+
+curveball() {
+    # saves command as variable (all this does is extract the download url)
+    # the $1 is also there to save space on needlessly retyping it, by just providing this: user/repo
+    # the number can also increment per argument added
+    freemovies=$(curl -s https://api.github.com/repos/$1/releases/latest | grep '"browser_download_url":' | grep .plasmoid | grep -o 'https://[^"]*')
+    # then it runs it
+    # first, widget is renamed so that this is reusable
+    curl -o widget -L -O ${freemovies}
+    # now we install it, then remove it
+    kpackagetool6 -t Plasma/Applet --install widget
+    # kpackagetool6 -t Plasma/Applet and
+    rm widget
+}
+# widget install
+# these dont need compilation, however
+winget2 () {
+    # installing quickclock, through git
+    # git clone https://github.com/kevinbudz/quickclock.git
+    # cd quickclock
+    # ./install.sh
+    # cd ../
+    # rm -rf quickclock
+    curveball pnedyalkov91/advanced-weather-widget
+    curveball itsKhangQBit/BetterBatteryWidget
+    # will make a but of a small exception and delete this
+    rm com.itsKhang.betterbatterywidget_p5.plasmoid
+    # curveball zeroxoneafour/polonium this one is a bit more complicated...
+}
+# anyways
+curvysphere() {
+    echo "5. installing non-package files through curl and git"
+    echo ""
+    # notwaybar
+    winget2
+}
+
+# i guess now we can call it
+# oh, also i have to do this each time i finish writing a function
+# they are also at the bottom, so that its faster to remove a step for debugging
+script_intro
+# this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
+# data_backup
+# pkg_manager_check
+# repo_update_time
+# packages_installation
+curvysphere
