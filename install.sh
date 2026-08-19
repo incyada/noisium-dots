@@ -3,16 +3,16 @@
 # DONE:
 # 1. backup all replaced files
 # 2. update repos and check which package manager is on the system (paru, yay, dnf, or apt)
-# 3. auto-check needed packages first, then install them (skipped apt for now, and would refactor fedora installs a bit)
-# TODO NEXT TIME: switch to kwin install depending on what is being installed and only install file if it contain .plasmoid or .kwinscript in it
+# 3. auto-check needed packages first, then install them
+# 4. install extensions needed (do want to support the projects at hand, although, im not sure how easy it will be)
 
 # NOT STARTED YET:
-# 4. install extensions needed (do want to support the projects at hand, although, im not sure how easy it will be)
 # 5. auto-create any folders that arent there for the installation
 # # folders needed: ~/.local/share/icons/hicolor/512x512/app, ~/.local/share/aurorae/themes, ~/.local/share/kwin/scripts
 # 6. replace instances of my name (incyada) to $USER
 # 7. check if the device has battery, why? cause not everyone has a laptop (use ls /sys/class/power_supply/BAT* and see if it doesnt error out)
 # 8. lots of manual copy-pasting
+# 9. finally i can test it
 
 # solid intro
 # made this a function for simplicity sake
@@ -114,157 +114,221 @@ packages_installation() {
     echo ""
     if [ "${pkg_manager}" = "redhatslop" ]; then
         # looks pretty unreadable, but i did my best to make it the opposite
+        local copper="sudo dnf copr enable -y"
+        local install="sudo dnf install -y"
         echo "Installing Darkly..."
-        echo "command executed: sudo dnf copr enable deltacopy/darkly -y"
-        sudo dnf copr enable deltacopy/darkly -y
-        echo "command executed: sudo dnf install darkly -y"
-        sudo dnf install darkly -y
+        echo "command executed: $copper deltacopy/darkly"
+        $copper deltacopy/darkly
+        echo "command executed: $install darkly"
+        $install darkly
 
         echo ""
         echo "Installing Rounded corners effect..."
-        echo "command executed: sudo dnf copr enable matinlotfali/KDE-Rounded-Corners -y"
-        sudo dnf copr enable matinlotfali/KDE-Rounded-Corners -y
-        echo "command executed: sudo dnf install kwin-effect-roundcorners -y"
-        sudo dnf install kwin-effect-roundcorners -y
+        echo "command executed: $copper matinlotfali/KDE-Rounded-Corners"
+        $copper matinlotfali/KDE-Rounded-Corners
+        echo "command executed: $install kwin-effect-roundcorners"
+        $install kwin-effect-roundcorners
 
         echo ""
         echo "Installing Better Blur DX..."
-        echo "command executed: sudo dnf copr enable infinality/kwin-effects-better-blur-dx -y"
-        sudo dnf copr enable infinality/kwin-effects-better-blur-dx -y
-        echo "command executed: sudo dnf install kwin-effects-better-blur-dx -y"
-        sudo dnf install kwin-effects-better-blur-dx -y
+        echo "command executed: $copper infinality/kwin-effects-better-blur-dx"
+        $copper infinality/kwin-effects-better-blur-dx
+        echo "command executed:$install kwin-effects-better-blur-dx"
+        $install kwin-effects-better-blur-dx
 
         echo ""
         echo "Installing Konsole (if its not there there)"
-        echo "command executed: sudo dnf install konsole -y"
-        sudo dnf install konsole -y
+        echo "command executed: $install konsole"
+        $install konsole -y
 
         echo ""
         echo "Cooking some fresh fish (if its not there there)"
         echo "If you dont want fish, then you can delete it after the dots are installing"
-        echo "command executed: sudo dnf install fish -y"
-        sudo dnf install fish -y
+        echo "command executed: $install fish"
+        $install fish
     elif [ "${pkg_manager}" = "rtfm" ]; then
         # arch is much simpler though, as coprs dont have to be added beforehand
         echo "Installing Darkly..."
         # as an arch user myself (well artix, to be exact), these flags just means that the package will be install if its not there and will not ask for confirmation, usually
-        echo "command executed: sudo $aur_helper darkly-bin --needed --noconfirm"
-        sudo $aur_helper darkly-bin --needed --noconfirm
+        local install="sudo $aur_helper -S"
+        local flags="--needed --noconfirm"
+        echo "command executed: $install darkly-bin $flags"
+        $install darkly-bin $flags
 
         echo ""
         echo "Installing Rounded corners effect..."
-        echo "command executed: sudo $aur_helper kwin-effect-rounded-corners --needed --noconfirm"
-        sudo $aur_helper kwin-effect-rounded-corners --needed --noconfirm
+        echo "command executed: $install kwin-effect-rounded-corners $flags"
+        $install kwin-effect-rounded-corners $flags
 
         echo ""
         echo "Installing Better Blur DX..."
-        echo "command executed: sudo $aur_helper kwin-effects-better-blur-dx --needed --noconfirm"
-        sudo $aur_helper kwin-effects-better-blur-dx --needed --noconfirm
+        echo "command executed: $install kwin-effects-better-blur-dx $flags"
+        $install kwin-effects-better-blur-dx $flags
 
+        # something interesting about aur helpers, atleast when it comes to paru, if i remember, is that it checks the main repositories first before resorting to the aur
+        # this means the install variable can be reused, and it still works
         echo ""
         echo "Installing Konsole (if its not there there)"
-        echo "command executed: sudo pacman -S konsole --needed --noconfirm"
-        sudo pacman -S konsole --needed --noconfirm
+        echo "command executed: $install konsole $flags"
+        $install konsole $flags
 
         echo ""
         echo "Cooking some fresh fish (if its not there there)"
         echo "If you dont want fish, then you can delete it after the dots are installing"
-        echo "command executed: sudo pacman -S fish --needed --noconfirm"
-        sudo pacman -S fish --needed --noconfirm
+        echo "command executed: $install fish $flags"
+        $install fish $flags
     else
-        echo "Debian-based has been skipped for now as not all of the packages are available as ppa (plus i want to work with vanilla debian, so any of ubuntu conveniences will be skipped)"
-        # this one is more complicated due to... well its debian, and its not known for being new
-        # use curl instead, but will be once i get there: https://github.com/Bali10050/Darkly/releases/download/v0.5.38/darkly-0.5.38_debian14_amd64.deb
-        # install the following packages first: sudo apt install -y git cmake g++ extra-cmake-modules qt6-tools-dev kwin-dev libkf6configwidgets-dev gettext libkf6crash-dev libkf6globalaccel-dev libkf6kio-dev libkf6service-dev libkf6notifications-dev libkf6kcmutils-dev libkdecorations3-dev libxcb-composite0-dev libxcb-randr0-dev libxcb-shm0-dev libxcb-res0-dev libxcb-sync-dev qt6-base-private-dev qt6-base-dev-tools libdrm-dev
+        # THIS HAS NOT BEEN TESTED YET
+        local install="sudo apt install -y"
+        echo "Installing Darkly..."
+        echo "curling first..."
+        # also im not even sure if this would work on kubuntu aswell, but i refuse to use anything ubuntu based, unless its mint
+        curl -o package.deb -L -O (curl -s https://api.github.com/repos/Bali10050/Darkly/releases/latest | grep '"browser_download_url":' | grep .deb | grep -o 'https://[^"]*')
+        # doesnt seem like apt needs another flag for installing local packages
+        echo "now we install with this command: $install ./package.deb # package.deb is supposed to be darkly, but renamed incase any versions were to be added"
+        $install ./package.deb
+        echo ""
+        echo "Hold on, ill need some dependencies first..."
+        echo "command executed: sudo apt install -y [a lot of packages that are harmless]"
+        $install git cmake g++ extra-cmake-modules qt6-tools-dev kwin-dev libkf6configwidgets-dev gettext libkf6crash-dev libkf6globalaccel-dev libkf6kio-dev libkf6service-dev libkf6notifications-dev libkf6kcmutils-dev libkdecorations3-dev libxcb-composite0-dev libxcb-randr0-dev libxcb-shm0-dev libxcb-res0-dev libxcb-sync-dev qt6-base-private-dev qt6-base-dev-tools libdrm-dev
 
-        # build script for better-blur-dx (i dont know how to remove it though)
-        # git clone https://github.com/xarblu/kwin-effects-better-blur-dx
-        # cd kwin-effects-better-blur-dx
-        # chmod +x build.sh
-        # ./build.sh
+        echo ""
+        echo "Building, and installing Better Blur DX..."
+        git clone https://github.com/xarblu/kwin-effects-better-blur-dx
+        cd kwin-effects-better-blur-dx
+        chmod +x build.sh
+        ./build.sh
+        cd ../
+        rm -rf kwin-effects-better-blur-dx
 
-        # build scipt for rounded corners (samw thing)
-        # git clone https://github.com/matinlotfali/KDE-Rounded-Corners
-        # cd KDE-Rounded-Corners
-        # mkdir build
-        # cd build
-        # cmake ..
-        # cmake --build . -j
-        # sudo make install
+        echo ""
+        echo "Building, and installing Rounded Corners..."
+        git clone https://github.com/matinlotfali/KDE-Rounded-Corners
+        cd KDE-Rounded-Corners
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build . -j
+        sudo make install
+        cd ../
+        rm -rf kwin-effects-better-blur-dx
 
         echo ""
         echo "Installing Konsole (if its not there there)"
-        echo "command executed: sudo apt install konsole -y"
-        sudo apt install konsole -y
+        echo "command executed: $install konsole"
+        $install konsole
 
         echo ""
         echo "Cooking some fresh fish (if its not there there)"
         echo "If you dont want fish, then you can delete it after the dots are installing"
-        echo "command executed: sudo apt install fish -y"
-        sudo apt install fish -y
+        echo "command executed: $install fish"
+        $install fish
     fi
 }
 
 # installing other extensions through curl
-# before that though...
-notwaybar() {
+# before that though... some functions will be defined first
+dependers() {
     # ill install panel colorizer and kara first, as they have to be built first (well, one works without, but it is better with a compiled plugin)
     # dependencies first
     echo "Installing dependencies first..."
     echo "the list is long, so ill spare you the details"
     if [ "$pkg_manager" = "redhatslop" ]; then
-        sudo dnf install -y git gcc-c++ cmake extra-cmake-modules libplasma-devel kf6-kcoreaddons-devel spectacle python3 python3-dbus python3-gobject gettext g++ qt6-qtbase-dev qt6-qtdeclarative-devel kf6-ki18n-devel kf6-kservice-devel kf6-kwindowsystem-devel libplasma-devel plasma-activities-devel kwin-devel wayland-devel libepoxy-devel libdrm-devel plasma-workspace-devel kf6-kitemmodels-devel
+        sudo dnf install -y git curl gcc-c++ cmake extra-cmake-modules libplasma-devel kf6-kcoreaddons-devel spectacle python3 python3-dbus python3-gobject gettext g++ qt6-qtbase-dev qt6-qtdeclarative-devel kf6-ki18n-devel kf6-kservice-devel kf6-kwindowsystem-devel libplasma-devel plasma-activities-devel kwin-devel wayland-devel libepoxy-devel libdrm-devel plasma-workspace-devel kf6-kitemmodels-devel
     elif [ "$pkg_manager" = "rtfm" ]; then
-        sudo pacman -S git gcc cmake extra-cmake-modules libplasma spectacle python python-dbus python-gobject gettext base-devel qt6-base qt6-declarative kwin plasma-activities plasma-workspace --needed --noconfirm
+        sudo pacman -S git curl gcc cmake extra-cmake-modules libplasma spectacle python python-dbus python-gobject gettext base-devel qt6-base qt6-declarative kwin plasma-activities plasma-workspace --needed --noconfirm
     else
-        sudo apt install -y git build-essential cmake extra-cmake-modules libplasma-dev kde-spectacle python3 python3-dbus python3-gi gettext cmake build-essential qt6-declarative-dev extra-cmake-modules qt6-base-dev libkf6i18n-dev libkf6service-dev libkf6windowsystem-dev plasma-workspace-dev libplasmaactivities-dev kwin-dev pkg-config libdrm-dev
+        sudo apt install -y git curl build-essential cmake extra-cmake-modules libplasma-dev kde-spectacle python3 python3-dbus python3-gi gettext cmake build-essential qt6-declarative-dev extra-cmake-modules qt6-base-dev libkf6i18n-dev libkf6service-dev libkf6windowsystem-dev plasma-workspace-dev libplasmaactivities-dev kwin-dev pkg-config libdrm-dev
     fi
-    # compile widgets
-    git clone https://github.com/luisbocanegra/plasma-panel-colorizer
-    cd plasma-panel-colorizer
-    ./install.sh
+}
+
+# function to make the tedious thing of manually installing github repos with install scripts in the root of the project
+# also i found the pixelify sans git repo, didnt know it has a github https://github.com/eifetx/Pixelify-Sans.git
+git_cloner_3000() {
+    # the $1 is there to save space on needlessly retyping it, by just providing this: user/repo
+    # the number can also increment per argument added, as $2 was added
+    # $1 is user, $2 is repo name
+    echo ""
+    echo "Installing $1/$2..."
+    git clone https://github.com/$1/$2
+    cd $2
+    ./install.sh $3 # this one is only for tela
     cd ../
-    rm -rf plasma-panel-colorizer
-    git clone https://github.com/dhruv8sh/kara.git
-    cd kara
-    ./install.sh
-    cd ../
-    rm -rf kara
+    rm -rf $2
 }
 
 curveball() {
-    # saves command as variable (all this does is extract the download url)
-    # the $1 is also there to save space on needlessly retyping it, by just providing this: user/repo
-    # the number can also increment per argument added
-    freemovies=$(curl -s https://api.github.com/repos/$1/releases/latest | grep '"browser_download_url":' | grep .plasmoid | grep -o 'https://[^"]*')
-    # then it runs it
-    # first, widget is renamed so that this is reusable
-    curl -o widget -L -O ${freemovies}
-    # now we install it, then remove it
-    kpackagetool6 -t Plasma/Applet --install widget
-    # kpackagetool6 -t Plasma/Applet and
-    rm widget
+    echo ""
+    echo "Installing $1..."
+    # created a git fallback specifically for scripts that for some reason, dont have github releases on them
+    if [ "$2" = "kwin" ]; then
+        local mp3player=kwinscript
+        local extension_install="kpackagetool6 -t KWin/Script --install extension"
+    else
+        local mp3player=plasmoid
+        local extension_install="kpackagetool6 -t Plasma/Applet --install extension"
+    fi
+    if [ "$2" = "git_fallback" -o "$3" = "git_fallback" ]; then
+        git clone https://github.com/$1.git fallback_extension
+        cd fallback_extension
+        if [ "$2" = "kwin" ]; then
+            kpackagetool6 -t KWin/Script --install .
+        else
+            kpackagetool6 -t Plasma/Applet --install .
+        fi
+        cd ../
+        rm -rf fallback_extension
+    else
+        # saves command as variable (all this does is extract the download url)
+        local freemovies=$(curl -s https://api.github.com/repos/$1/releases/latest | grep '"browser_download_url":' | grep .$mp3player | grep -o 'https://[^"]*')
+        # then it runs it
+        # first, widget is renamed so that this is reusable
+        curl -o extension -L -O ${freemovies}
+        # now we install it, then remove it
+        $extension_install
+        rm extension
+    fi
 }
 # widget install
-# these dont need compilation, however
+# the first 2 need compilation
 winget2 () {
-    # installing quickclock, through git
-    # git clone https://github.com/kevinbudz/quickclock.git
-    # cd quickclock
-    # ./install.sh
-    # cd ../
-    # rm -rf quickclock
-    curveball pnedyalkov91/advanced-weather-widget
-    curveball itsKhangQBit/BetterBatteryWidget
-    # will make a but of a small exception and delete this
-    rm com.itsKhang.betterbatterywidget_p5.plasmoid
-    # curveball zeroxoneafour/polonium this one is a bit more complicated...
+    # git_cloner_3000 luisbocanegra plasma-panel-colorizer
+    # git_cloner_3000 dhruv8sh kara
+    # git_cloner_3000 kevinbudz quickclock
+    # curveball pnedyalkov91/advanced-weather-widget
+    # curveball itsKhangQBit/BetterBatteryWidget
+    # will make a bit of a small exception and delete this
+    # rm com.itsKhang.betterbatterywidget_p5.plasmoid
+    # curveball zeroxoneafour/polonium kwin
+    # curveball maurges/dynamic_workspaces kwin
+    # curveball maurges/dynamic_workspaces kwin git_fallback
+    # im going to mostly wing the rest of them, as they are just edge case that dont necessarily need an entire function for it
+    # echo ""
+    # echo "Installing dynamic_padding..."
+    # kpackagetool6 -t KWin/Script --install kde/dynamic_padding.kwinscript
+    # git_cloner_3000 vinceliuice Tela-icon-theme -c
+    # echo ""
+    # echo "Installing Pixelify Sans (user-wide)..."
+    # git clone https://github.com/eifetx/Pixelify-Sans.git
+    # cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf ~/.local/share/fonts/PixelifySans.ttf
+    rm -rf Pixelify-Sans
+    echo ""
+    echo "Installing Monocraft (user wide)..."
+    # mini curveball
+    local freegamesdotcom=$(curl -s https://api.github.com/repos/IdreesInc/Monocraft/releases/latest | grep '"browser_download_url":' | grep Monocraft-nerd-fonts-patched.ttc | grep -o 'https://[^"]*')
+    curl -L -O ${freegamesdotcom}
+    # now we install it, then remove it
+    cp Monocraft-nerd-fonts-patched.ttc ~/.local/share/fonts/Monocraft.ttc
+    rm Monocraft-nerd-fonts-patched.ttc
+    echo ""
+    echo "Installing Starship (fish prompt theming)..."
+    curl -sS https://starship.rs/install.sh | sh
 }
-# anyways
+# massive sidequest aside, here is the cleaner, final function
 curvysphere() {
     echo "5. installing non-package files through curl and git"
     echo ""
-    # notwaybar
+    # dependers
     winget2
 }
 
@@ -273,8 +337,8 @@ curvysphere() {
 # they are also at the bottom, so that its faster to remove a step for debugging
 script_intro
 # this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
-# data_backup
-# pkg_manager_check
-# repo_update_time
-# packages_installation
-curvysphere
+# data_backup # step 1
+# pkg_manager_check # step 2
+# repo_update_time # step 3
+# packages_installation # step 4
+curvysphere # step 5

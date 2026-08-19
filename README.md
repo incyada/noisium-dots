@@ -39,7 +39,7 @@ These are the things that I used to make this theme possible. Not all of them ca
 | Plasma Style | Plasmorphism, but modified |
 | Window Decoration | Loosely based on Dexy Colour, with title bar-less variant |
 | Icon Theme | Tela, with KDE folder colours |
-| System Sounds | Modern Minimal UI |
+| System Sounds | Modern Minimal UI (But its not provided incase you prefer the ocean theme) |
 | Splash screen | Modified Fedora Minimalistic |
 | Login Screen | Silent and SDDM |
 | System Font | Pixelify Sans |
