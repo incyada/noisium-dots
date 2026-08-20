@@ -6,7 +6,6 @@ i know i could do it in a better way, but this increases readability, and if you
 -- plasma, color-scheme, wallpapers & konsole: ~/.local/share
 --start bloom: ~/.local/share/icons/hicolor/512x512/app (this is needed for the app launncher icon)
 -- configs: you wont believe this (although, place contents in .config)
---- although, for the plasmashell file, that stores the whole thing, id have to replace each instance of my username (incyada) with the user's actual name (can use $USER for this)
 -- aurorare-themes: place contents inside of ~/.local/share/aurorae/themes, will have to rename or copy the themes specifically in a non destructive way, probably through willcard
 -- silent-sddm: ~/usr/share/sddm/themes/silent
 -- dynamic padding.kwinscript: either unzip (yes, unZIP it) and sent it to ~/.local/share/kwin/scripts, or run this in terminal on directory of the file: kpackagetool6 -t KWin/Script --install dynamic_padding.kwinscript

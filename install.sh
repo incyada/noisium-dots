@@ -5,14 +5,14 @@
 # 2. update repos and check which package manager is on the system (paru, yay, dnf, or apt)
 # 3. auto-check needed packages first, then install them
 # 4. install extensions needed (do want to support the projects at hand, although, im not sure how easy it will be)
+# 5. auto-create any folders that arent there for the installation
+# 6. replace instances of my name (incyada) to $USER
 
 # NOT STARTED YET:
-# 5. auto-create any folders that arent there for the installation
-# # folders needed: ~/.local/share/icons/hicolor/512x512/app, ~/.local/share/aurorae/themes, ~/.local/share/kwin/scripts
-# 6. replace instances of my name (incyada) to $USER
 # 7. check if the device has battery, why? cause not everyone has a laptop (use ls /sys/class/power_supply/BAT* and see if it doesnt error out)
 # 8. lots of manual copy-pasting
-# 9. finally i can test it
+# 9. cleanup (if any)
+# 10. finally i can test it
 
 # solid intro
 # made this a function for simplicity sake
@@ -183,14 +183,15 @@ packages_installation() {
         echo "Installing Darkly..."
         echo "curling first..."
         # also im not even sure if this would work on kubuntu aswell, but i refuse to use anything ubuntu based, unless its mint
-        curl -o package.deb -L -O (curl -s https://api.github.com/repos/Bali10050/Darkly/releases/latest | grep '"browser_download_url":' | grep .deb | grep -o 'https://[^"]*')
+        curl -L -O $(curl -s https://api.github.com/repos/Bali10050/Darkly/releases/latest | grep '"browser_download_url":' | grep .deb | grep -o 'https://[^"]*')
         # doesnt seem like apt needs another flag for installing local packages
         echo "now we install with this command: $install ./package.deb # package.deb is supposed to be darkly, but renamed incase any versions were to be added"
-        $install ./package.deb
+        # using willcard to always install deb file no matter what the name is
+        $install ./*.deb
         echo ""
         echo "Hold on, ill need some dependencies first..."
         echo "command executed: sudo apt install -y [a lot of packages that are harmless]"
-        $install git cmake g++ extra-cmake-modules qt6-tools-dev kwin-dev libkf6configwidgets-dev gettext libkf6crash-dev libkf6globalaccel-dev libkf6kio-dev libkf6service-dev libkf6notifications-dev libkf6kcmutils-dev libkdecorations3-dev libxcb-composite0-dev libxcb-randr0-dev libxcb-shm0-dev libxcb-res0-dev libxcb-sync-dev qt6-base-private-dev qt6-base-dev-tools libdrm-dev
+        $install git curl cmake g++ extra-cmake-modules qt6-tools-dev kwin-dev libkf6configwidgets-dev gettext libkf6crash-dev libkf6globalaccel-dev libkf6kio-dev libkf6service-dev libkf6notifications-dev libkf6kcmutils-dev libkdecorations3-dev libxcb-composite0-dev libxcb-randr0-dev libxcb-shm0-dev libxcb-res0-dev libxcb-sync-dev qt6-base-private-dev qt6-base-dev-tools libdrm-dev
 
         echo ""
         echo "Building, and installing Better Blur DX..."
@@ -243,7 +244,6 @@ dependers() {
 }
 
 # function to make the tedious thing of manually installing github repos with install scripts in the root of the project
-# also i found the pixelify sans git repo, didnt know it has a github https://github.com/eifetx/Pixelify-Sans.git
 git_cloner_3000() {
     # the $1 is there to save space on needlessly retyping it, by just providing this: user/repo
     # the number can also increment per argument added, as $2 was added
@@ -326,19 +326,59 @@ winget2 () {
 }
 # massive sidequest aside, here is the cleaner, final function
 curvysphere() {
-    echo "5. installing non-package files through curl and git"
+    echo "6. installing non-package files through curl and git"
     echo ""
     # dependers
     winget2
 }
 
-# i guess now we can call it
-# oh, also i have to do this each time i finish writing a function
+# finally, another function: creating needed folders
+# this step is quick, so its unnecessary to report the step to the terminal
+fold() {
+    mkdir ~/.local/share/$1
+}
+
+missinformation() {
+    echo "5. creating missing needed folders (its just 2 lines)"
+    echo ""
+    fold icons/hicolor/512x512/app
+    fold aurorae/themes
+}
+
+# renaming all instances of my name (incyada), to the one of the user running the script
+yourname() {
+    echo "7. fixing filepaths to specify current user, instead of incyada"
+    echo ""
+    # make a temporary backup for good measure
+    # but, for now, it is used as i wanted to avoid changing the main folder
+    local deletemii=""
+    # i have to swith my keyboard layout to french to capture a command output into a variable (i already use french since i live in a country where people primaly speak it (its not french), since this symbol isnt used at all in french
+    # who in their right mind thought this was a good idea
+    # also im using a backup, since i want to avoid destroying my only backup for this script, for now
+    local miikiller=`grep -rl incyada kde-backup/*`
+    local deletemii+="$miikiller"
+    #echo "$deletemii"
+    # im gonna need to spilt each file cleanly, so this small loop should do it
+    lines=() # this cant be an enmpty line, cause otherwise, an issue where that same line for some reason, gets processed, would pop up
+    while IFS= read -r line; do
+        lines+=("$line")
+    done < <(printf "$deletemii")
+
+    # now for each entry in there, replaace any instance of my name, with who is running it
+    for entry in "${lines[@]}"; do
+        grep -r incyada "./$entry" | sed -i "s/incyada/$USER/g" "$entry"
+        echo "Overriden $entry"
+    done
+}
+
+# i guess now we can call them
 # they are also at the bottom, so that its faster to remove a step for debugging
-script_intro
+# script_intro
 # this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
 # data_backup # step 1
 # pkg_manager_check # step 2
 # repo_update_time # step 3
 # packages_installation # step 4
-curvysphere # step 5
+# missinformation # step 5
+# curvysphere # step 6
+yourname # step 7
