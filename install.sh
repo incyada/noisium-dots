@@ -389,6 +389,13 @@ batterycheck() {
 # im tired and will explain this tomorrow
 imclose() {
     local backup="./kde-backup"
+    # dry run avoids doing anything destructive, incase its needed
+    local dry_run=0
+    if [[ "$1" == "--dry-run" ]]; then
+        dry_run=1
+        shift
+    fi
+
     declare -A simple=(
         [plasma]="$HOME/.local/share/plasma"
         [color-schemes]="$HOME/.local/share/color-schemes"
@@ -397,19 +404,25 @@ imclose() {
         [configs]="$HOME/.config"
     )
 
+    _do() {
+        if [[ $dry_run -eq 1 ]]; then
+            echo "[dry-run] $*"
+        else
+            "$@"
+        fi
+    }
+
     for item in "$@"; do
-        echo "copying $item"
         if [[ -n "${simple[$item]}" ]]; then
-            mkdir -p "${simple[$item]}" && cp -r "$backup/$item/." "${simple[$item]}/"
+            _do mkdir -p "${simple[$item]}"
+            _do cp -r "$backup/$item/." "${simple[$item]}/"
         elif [[ "$item" == start-bloom ]]; then
             local icon_dir="$HOME/.local/share/icons/hicolor/512x512/app"
-            mkdir -p "$icon_dir"
-            cp "$backup/Start Bloom.svg" "$icon_dir/"
+            _do mkdir -p "$icon_dir"
+            _do cp "$backup/Start Bloom.svg" "$icon_dir/"
         elif [[ "$item" == aurorae ]]; then
-            mkdir -p "$HOME/.local/share/aurorae/themes"
-            cp -rn "$backup/aurorae-themes"/*/ "$HOME/.local/share/aurorae/themes/"
-        elif [[ "$item" == kwinscript ]]; then
-            kpackagetool6 -t KWin/Script --install "$backup/dynamic_padding.kwinscript"
+            _do mkdir -p "$HOME/.local/share/aurorae/themes"
+            _do cp -rn "$backup/aurorae-themes"/*/ "$HOME/.local/share/aurorae/themes/"
         else
             echo "Unknown item: $item" >&2
         fi
@@ -417,7 +430,7 @@ imclose() {
 }
 
 dotinstall() {
-    imclose plasma color-schemes wallpapers konsole start-bloom configs aurorae kwinscript
+    imclose --dry-run plasma color-schemes wallpapers konsole start-bloom configs aurorae
 }
 
 # i guess now we can call them
