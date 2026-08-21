@@ -17,6 +17,13 @@
 # solid intro
 # made this a function for simplicity sake
 # actually, this whole file is just functions
+
+# tiny warning to say to the user DO NOT RUNT THIS AS ROOT, THE SCRIPT WILL DO IT ITSELF
+if [[ $EUID -eq 0 ]]; then
+   echo "[NOTE]: pls dont make me destroy your system pls (no sudo)";
+   exit 1;
+fi
+
 script_intro() {
     # not sure if multiple lines will slow things down for systems that are pretty slow
     echo "* * NOISIUM DOTS TUI INSTALLER * *"
@@ -29,10 +36,11 @@ script_intro() {
     echo "If you are willing to add support for other distros (such as NixOS, Gentoo, Alpine, or openSUSE, feel free to open a pull request to this repository: https://github.com/incyada/noisium-dots/pulls"
     # allows asking for input, in this case, its just to press enter in order to continue
     read -p "Press enter to continue: " enter
+
     echo ""
     echo "Before proceding, some things to note first:"
     echo "- This script will modify some user files and configurations, but the script backs them up first incase you want to easily switch back."
-    echo "- In some cases, sudo will appear in order to install certain packages for this theme. If you arent comfortable with that, you can exit right away (CTRL + C)."
+    echo "- In some cases, sudo will appear in order to install certain packages for this theme, you will notice as it will be invoked when needed. If you arent comfortable with that, you can exit right away (CTRL + C)."
     read -p "The next time you press enter, the script will create a backup of the most important files, and start installing itself. To accept and start, press enter: " enter
 }
 
@@ -108,7 +116,7 @@ repo_update_time() {
 
 # installing system packages
 # i have an idea, and its just to turn all of these entries into functions, rather than hardcoded commands
-# ill reserve this at the end of the script
+# ill reserve this at the end of the script, also 117 line difference, jesus...
 packages_installation() {
     echo "4. Installing needed system packages"
     echo ""
@@ -116,67 +124,46 @@ packages_installation() {
         # looks pretty unreadable, but i did my best to make it the opposite
         local copper="sudo dnf copr enable -y"
         local install="sudo dnf install -y"
-        echo "Installing Darkly..."
-        echo "command executed: $copper deltacopy/darkly"
-        $copper deltacopy/darkly
-        echo "command executed: $install darkly"
-        $install darkly
+        # the $1 is there to save space on needlessly retyping it, by just providing this: user/repo
+        # the number can also increment per argument added, as $2 was added
+        # for dnf, $1 is the copr to enable, and $2 is the package
+        package() {
+            if [[ "$1" == *"/"* ]]; then
+                echo "Installing $2..."
+                echo "command executed: $copper $1"
+                $copper $1
+                echo "command executed: $install $2"
+                $install $2
+            else
+                echo "Installing $1..."
+                echo "command executed: $install $1"
+                $install $1
+            fi
+        }
 
-        echo ""
-        echo "Installing Rounded corners effect..."
-        echo "command executed: $copper matinlotfali/KDE-Rounded-Corners"
-        $copper matinlotfali/KDE-Rounded-Corners
-        echo "command executed: $install kwin-effect-roundcorners"
-        $install kwin-effect-roundcorners
-
-        echo ""
-        echo "Installing Better Blur DX..."
-        echo "command executed: $copper infinality/kwin-effects-better-blur-dx"
-        $copper infinality/kwin-effects-better-blur-dx
-        echo "command executed:$install kwin-effects-better-blur-dx"
-        $install kwin-effects-better-blur-dx
-
-        echo ""
-        echo "Installing Konsole (if its not there there)"
-        echo "command executed: $install konsole"
-        $install konsole -y
-
-        echo ""
-        echo "Cooking some fresh fish (if its not there there)"
-        echo "If you dont want fish, then you can delete it after the dots are installing"
-        echo "command executed: $install fish"
-        $install fish
+        package deltacopy/darkly darkly
+        package matinlotfali/KDE-Rounded-Corners kwin-effect-roundcorners
+        package infinality/kwin-effects-better-blur-dx kwin-effects-better-blur-dx
+        package konsole
+        package fish
     elif [ "${pkg_manager}" = "rtfm" ]; then
         # arch is much simpler though, as coprs dont have to be added beforehand
-        echo "Installing Darkly..."
         # as an arch user myself (well artix, to be exact), these flags just means that the package will be install if its not there and will not ask for confirmation, usually
         local install="sudo $aur_helper -S"
         local flags="--needed --noconfirm"
-        echo "command executed: $install darkly-bin $flags"
-        $install darkly-bin $flags
+        package() {
+            echo "Installing $1..."
+            echo "command executed: $install $1 $flags"
+            $install $1 $flags
+        }
 
-        echo ""
-        echo "Installing Rounded corners effect..."
-        echo "command executed: $install kwin-effect-rounded-corners $flags"
-        $install kwin-effect-rounded-corners $flags
-
-        echo ""
-        echo "Installing Better Blur DX..."
-        echo "command executed: $install kwin-effects-better-blur-dx $flags"
-        $install kwin-effects-better-blur-dx $flags
-
+        package darkly-bin
+        package kwin-effect-rounded-corners
+        package kwin-effects-better-blur-dx
         # something interesting about aur helpers, atleast when it comes to paru, if i remember, is that it checks the main repositories first before resorting to the aur
         # this means the install variable can be reused, and it still works
-        echo ""
-        echo "Installing Konsole (if its not there there)"
-        echo "command executed: $install konsole $flags"
-        $install konsole $flags
-
-        echo ""
-        echo "Cooking some fresh fish (if its not there there)"
-        echo "If you dont want fish, then you can delete it after the dots are installing"
-        echo "command executed: $install fish $flags"
-        $install fish $flags
+        package konsole
+        package fish
     else
         # THIS HAS NOT BEEN TESTED YET
         local install="sudo apt install -y"
@@ -194,7 +181,7 @@ packages_installation() {
         $install git curl cmake g++ extra-cmake-modules qt6-tools-dev kwin-dev libkf6configwidgets-dev gettext libkf6crash-dev libkf6globalaccel-dev libkf6kio-dev libkf6service-dev libkf6notifications-dev libkf6kcmutils-dev libkdecorations3-dev libxcb-composite0-dev libxcb-randr0-dev libxcb-shm0-dev libxcb-res0-dev libxcb-sync-dev qt6-base-private-dev qt6-base-dev-tools libdrm-dev
 
         echo ""
-        echo "Building, and installing Better Blur DX..."
+        echo "Building, and installing kwin-effects-better-blur-dx..."
         git clone https://github.com/xarblu/kwin-effects-better-blur-dx
         cd kwin-effects-better-blur-dx
         chmod +x build.sh
@@ -203,7 +190,7 @@ packages_installation() {
         rm -rf kwin-effects-better-blur-dx
 
         echo ""
-        echo "Building, and installing Rounded Corners..."
+        echo "Building, and installing KDE-Rounded-Corners..."
         git clone https://github.com/matinlotfali/KDE-Rounded-Corners
         cd KDE-Rounded-Corners
         mkdir build
@@ -212,16 +199,15 @@ packages_installation() {
         cmake --build . -j
         sudo make install
         cd ../
-        rm -rf kwin-effects-better-blur-dx
+        rm -rf KDE-Rounded-Corners
 
         echo ""
-        echo "Installing Konsole (if its not there there)"
+        echo "Installing konsole..."
         echo "command executed: $install konsole"
         $install konsole
 
         echo ""
-        echo "Cooking some fresh fish (if its not there there)"
-        echo "If you dont want fish, then you can delete it after the dots are installing"
+        echo "Installing fish..."
         echo "command executed: $install fish"
         $install fish
     fi
@@ -245,8 +231,6 @@ dependers() {
 
 # function to make the tedious thing of manually installing github repos with install scripts in the root of the project
 git_cloner_3000() {
-    # the $1 is there to save space on needlessly retyping it, by just providing this: user/repo
-    # the number can also increment per argument added, as $2 was added
     # $1 is user, $2 is repo name
     echo ""
     echo "Installing $1/$2..."
@@ -385,25 +369,29 @@ batterycheck() {
 }
 
 # finally, with all of that being done, i can now manually, copy-paste everything
-# well not quite, i will do some small optimisations
+# well not quite, i will add some complexity as to not make this code hideous
 # im tired and will explain this tomorrow
 imclose() {
     local backup="./kde-backup"
+    local data="$HOME/.local/share"
     # dry run avoids doing anything destructive, incase its needed
     local dry_run=0
-    if [[ "$1" == "--dry-run" ]]; then
+    if [[ "$1" == "dry-run" ]]; then
         dry_run=1
         shift
     fi
 
+    # declare is a fancier way of setting values to variables by adding attrubutes
+    # in this case, each entries is an alias for a longer entry
     declare -A simple=(
-        [plasma]="$HOME/.local/share/plasma"
-        [color-schemes]="$HOME/.local/share/color-schemes"
-        [wallpapers]="$HOME/.local/share/wallpapers"
-        [konsole]="$HOME/.local/share/konsole"
+        [plasma]="$data/plasma"
+        [color-schemes]="$data/color-schemes"
+        [wallpapers]="$data/wallpapers"
+        [konsole]="$data/konsole"
         [configs]="$HOME/.config"
     )
 
+    # run dry run if declared
     _do() {
         if [[ $dry_run -eq 1 ]]; then
             echo "[dry-run] $*"
@@ -412,17 +400,64 @@ imclose() {
         fi
     }
 
+    # to be honest, i didnt write this, but i can explain it
+    # this is needed for kwinrc, as to respect user defaults
+    # what it does, is look through each entry, and only overriding any entries from the dotfiles, rather than the whole thing
+    merge_ini() {
+        local src="$1"
+        local dest="$2"
+        mkdir -p "$(dirname "$dest")"
+        touch "$dest"
+        awk -v src="$src" '
+        BEGIN {
+            sec = ""
+            while ((getline line < src) > 0) {
+                if (line ~ /^\[.*\]$/) { sec = line; continue }
+                srclines[sec] = srclines[sec] line "\n"
+            }
+            close(src)
+        }
+        /^\[.*\]$/ {
+            cursec = $0
+            if (cursec in srclines) {
+                print cursec
+                printf "%s", srclines[cursec]
+                used[cursec] = 1
+                skip = 1
+            } else {
+                skip = 0
+                print
+            }
+            next
+        }
+        { if (!skip) print }
+        END {
+            for (s in srclines) {
+                if (s != "" && !(s in used)) {
+                    print s
+                    printf "%s", srclines[s]
+                }
+            }
+        }
+        ' "$dest" > "$dest.tmp" && mv "$dest.tmp" "$dest"
+    }
+
+    # copies any entry that have more unique filepaths
+    # basically boils down to "if its this, run this-and honestly? thats extravagant."
+    # how did i do my ai comment
     for item in "$@"; do
         if [[ -n "${simple[$item]}" ]]; then
             _do mkdir -p "${simple[$item]}"
             _do cp -r "$backup/$item/." "${simple[$item]}/"
         elif [[ "$item" == start-bloom ]]; then
-            local icon_dir="$HOME/.local/share/icons/hicolor/512x512/app"
-            _do mkdir -p "$icon_dir"
-            _do cp "$backup/Start Bloom.svg" "$icon_dir/"
+            local myflower="$HOME/.local/share/icons/hicolor/512x512/app"
+            _do mkdir -p "$myflower"
+            _do cp "$backup/Start Bloom.svg" "$myflower/"
         elif [[ "$item" == aurorae ]]; then
             _do mkdir -p "$HOME/.local/share/aurorae/themes"
             _do cp -rn "$backup/aurorae-themes"/*/ "$HOME/.local/share/aurorae/themes/"
+        elif [[ "$item" == kwin ]]; then
+            _do merge_ini "$backup/kwinrc" "$HOME/.config/kwinrc"
         else
             echo "Unknown item: $item" >&2
         fi
@@ -432,9 +467,8 @@ imclose() {
 dotinstall() {
     echo "9. actually installing the dot files"
     echo ""
-    imclose --dry-run plasma color-schemes wallpapers konsole start-bloom configs aurorae
+    imclose dry-run plasma color-schemes wallpapers konsole kwin start-bloom configs aurorae
 }
-
 # i guess now we can call them
 # they are also at the bottom, so that its faster to remove a step for debugging
 # script_intro
