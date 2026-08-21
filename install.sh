@@ -42,8 +42,8 @@ echo "- alright then, lets begin!"
 data_backup() {
     echo "1. Backing up user data (for extra mesure)..."
     ""
-    cp -r ~/.config ~./.config-backup
-    cp -r ~/.local/share ~/.local/share-backup
+    cp -r $HOME/.config $HOME./.config-backup
+    cp -r $HOME/.local/share $HOME/.local/share-backup
 }
 
 # package check via package manager
@@ -310,7 +310,7 @@ winget2 () {
     # echo ""
     # echo "Installing Pixelify Sans (user-wide)..."
     # git clone https://github.com/eifetx/Pixelify-Sans.git
-    # cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf ~/.local/share/fonts/PixelifySans.ttf
+    # cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/fonts/PixelifySans.ttf
     rm -rf Pixelify-Sans
     echo ""
     echo "Installing Monocraft (user wide)..."
@@ -318,7 +318,7 @@ winget2 () {
     local freegamesdotcom=$(curl -s https://api.github.com/repos/IdreesInc/Monocraft/releases/latest | grep '"browser_download_url":' | grep Monocraft-nerd-fonts-patched.ttc | grep -o 'https://[^"]*')
     curl -L -O ${freegamesdotcom}
     # now we install it, then remove it
-    cp Monocraft-nerd-fonts-patched.ttc ~/.local/share/fonts/Monocraft.ttc
+    cp Monocraft-nerd-fonts-patched.ttc $HOME/.local/share/fonts/Monocraft.ttc
     rm Monocraft-nerd-fonts-patched.ttc
     echo ""
     echo "Installing Starship (fish prompt theming)..."
@@ -335,7 +335,7 @@ curvysphere() {
 # finally, another function: creating needed folders
 # this step is quick, so its unnecessary to report the step to the terminal
 fold() {
-    mkdir ~/.local/share/$1
+    mkdir $HOME/.local/share/$1
 }
 
 missinformation() {
@@ -445,4 +445,4 @@ dotinstall() {
 # curvysphere # step 6
 # yourname # step 7
 # batterycheck # step 8
-dotinstall
+dotinstall # step 9
