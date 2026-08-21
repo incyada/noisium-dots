@@ -7,10 +7,10 @@
 # 4. install extensions needed (do want to support the projects at hand, although, im not sure how easy it will be)
 # 5. auto-create any folders that arent there for the installation
 # 6. replace instances of my name (incyada) to $USER
-
-# NOT STARTED YET:
 # 7. check if the device has battery, why? cause not everyone has a laptop (use ls /sys/class/power_supply/BAT* and see if it doesnt error out)
 # 8. lots of manual copy-pasting
+
+# NOT STARTED YET:
 # 9. cleanup (if any)
 # 10. finally i can test it
 
@@ -350,16 +350,15 @@ yourname() {
     echo "7. fixing filepaths to specify current user, instead of incyada"
     echo ""
     # make a temporary backup for good measure
-    # but, for now, it is used as i wanted to avoid changing the main folder
+    # will be worked on
+    cp -r ./kde ./kde-backup
     local deletemii=""
-    # i have to swith my keyboard layout to french to capture a command output into a variable (i already use french since i live in a country where people primaly speak it (its not french), since this symbol isnt used at all in french
-    # who in their right mind thought this was a good idea
-    # also im using a backup, since i want to avoid destroying my only backup for this script, for now
-    local miikiller=`grep -rl incyada kde-backup/*`
+    # im using a backup, since i want to avoid destroying my only backup for this script, for now
+    local miikiller=$(grep -rl incyada kde-backup/*)
     local deletemii+="$miikiller"
     #echo "$deletemii"
     # im gonna need to spilt each file cleanly, so this small loop should do it
-    lines=() # this cant be an enmpty line, cause otherwise, an issue where that same line for some reason, gets processed, would pop up
+    #local lines=() # this cant be an enmpty line, cause otherwise, an issue where that same line for some reason, gets processed, would pop up
     while IFS= read -r line; do
         lines+=("$line")
     done < <(printf "$deletemii")
@@ -369,6 +368,56 @@ yourname() {
         grep -r incyada "./$entry" | sed -i "s/incyada/$USER/g" "$entry"
         echo "Overriden $entry"
     done
+}
+
+# most people have desktops, but i have a laptop, and since the battery widget is placed there for my usecase, ill have to detect whether or not someone has a battery on their laptop, and if its necessary to use the battery-less variant for this script
+batterycheck() {
+    echo "8. check if the device running the script isnt plugged 24/7"
+    echo ""
+    # null is nothing, who would have guessed
+    ls /sys/class/power_supply/BAT* > /dev/null
+    # checks exit code of file
+    if [ $? -eq 0 ]; then
+        echo "Device has a battery. layout will change accordingly"
+    else
+        echo "Device doesnt have a battery. layout will change accordingly"
+    fi
+}
+
+# finally, with all of that being done, i can now manually, copy-paste everything
+# well not quite, i will do some small optimisations
+# im tired and will explain this tomorrow
+imclose() {
+    local backup="./kde-backup"
+    declare -A simple=(
+        [plasma]="$HOME/.local/share/plasma"
+        [color-schemes]="$HOME/.local/share/color-schemes"
+        [wallpapers]="$HOME/.local/share/wallpapers"
+        [konsole]="$HOME/.local/share/konsole"
+        [configs]="$HOME/.config"
+    )
+
+    for item in "$@"; do
+        echo "copying $item"
+        if [[ -n "${simple[$item]}" ]]; then
+            mkdir -p "${simple[$item]}" && cp -r "$backup/$item/." "${simple[$item]}/"
+        elif [[ "$item" == start-bloom ]]; then
+            local icon_dir="$HOME/.local/share/icons/hicolor/512x512/app"
+            mkdir -p "$icon_dir"
+            cp "$backup/Start Bloom.svg" "$icon_dir/"
+        elif [[ "$item" == aurorae ]]; then
+            mkdir -p "$HOME/.local/share/aurorae/themes"
+            cp -rn "$backup/aurorae-themes"/*/ "$HOME/.local/share/aurorae/themes/"
+        elif [[ "$item" == kwinscript ]]; then
+            kpackagetool6 -t KWin/Script --install "$backup/dynamic_padding.kwinscript"
+        else
+            echo "Unknown item: $item" >&2
+        fi
+    done
+}
+
+dotinstall() {
+    imclose plasma color-schemes wallpapers konsole start-bloom configs aurorae kwinscript
 }
 
 # i guess now we can call them
@@ -381,4 +430,6 @@ yourname() {
 # packages_installation # step 4
 # missinformation # step 5
 # curvysphere # step 6
-yourname # step 7
+# yourname # step 7
+# batterycheck # step 8
+dotinstall
