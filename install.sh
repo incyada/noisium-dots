@@ -11,8 +11,9 @@
 # 8. lots of manual copy-pasting
 
 # NOT STARTED YET:
-# 9. cleanup (if any)
-# 10. finally i can test it
+# 9. finally i can test it
+# # problems: kde control station doesnt get installed, app launcher icon is not even there, theme seems to not be applied even after session restart
+# 10. cleanup (if any)
 
 # solid intro
 # made this a function for simplicity sake
@@ -50,7 +51,7 @@ echo "- alright then, lets begin!"
 data_backup() {
     echo "1. Backing up user data (for extra mesure)..."
     ""
-    cp -r $HOME/.config $HOME./.config-backup
+    cp -r $HOME/.config $HOME/.config-backup
     cp -r $HOME/.local/share $HOME/.local/share-backup
 }
 
@@ -98,7 +99,7 @@ pkg_manager_check() {
 # update repositories
 repo_update_time() {
     echo "3. Updating repositories, but not updating packages"
-    echo "[NOTE]: You will be asked to input your password here, as package list updates are ususally like that."
+    echo "[NOTE]: You will be asked to input your password here, as package list updates are usually like that."
     echo ""
     # checks if a variable is a certain string
     if [ "${pkg_manager}" = "rtfm" ]; then
@@ -294,15 +295,15 @@ winget2 () {
     # echo ""
     # echo "Installing Pixelify Sans (user-wide)..."
     # git clone https://github.com/eifetx/Pixelify-Sans.git
-    # cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/fonts/PixelifySans.ttf
+    # cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/p/fonts/PixelifySans.ttf
     rm -rf Pixelify-Sans
     echo ""
-    echo "Installing Monocraft (user wide)..."
+    echo "Installing Monocraft (user-wide)..."
     # mini curveball
     local freegamesdotcom=$(curl -s https://api.github.com/repos/IdreesInc/Monocraft/releases/latest | grep '"browser_download_url":' | grep Monocraft-nerd-fonts-patched.ttc | grep -o 'https://[^"]*')
     curl -L -O ${freegamesdotcom}
     # now we install it, then remove it
-    cp Monocraft-nerd-fonts-patched.ttc $HOME/.local/share/fonts/Monocraft.ttc
+    cp Monocraft-nerd-fonts-patched.ttc $HOME/.local/share/fonts/p/Monocraft.ttc
     rm Monocraft-nerd-fonts-patched.ttc
     echo ""
     echo "Installing Starship (fish prompt theming)..."
@@ -325,7 +326,7 @@ fold() {
 missinformation() {
     echo "5. creating missing needed folders (its just 2 lines)"
     echo ""
-    fold icons/hicolor/512x512/app
+    fold icons/hicolor/512x512/apps
     fold aurorae/themes
 }
 
@@ -363,8 +364,10 @@ batterycheck() {
     # checks exit code of file
     if [ $? -eq 0 ]; then
         echo "Device has a battery. layout will change accordingly"
+        batstatus=1
     else
         echo "Device doesnt have a battery. layout will change accordingly"
+        batstatus=2
     fi
 }
 
