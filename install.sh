@@ -430,6 +430,8 @@ imclose() {
 }
 
 dotinstall() {
+    echo "9. actually installing the dot files"
+    echo ""
     imclose --dry-run plasma color-schemes wallpapers konsole start-bloom configs aurorae
 }
 
