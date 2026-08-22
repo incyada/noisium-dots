@@ -301,7 +301,18 @@ winget2 () {
     echo ""
     echo "Installing dynamic_padding..."
     kpackagetool6 -t KWin/Script --install kde/dynamic_padding.kwinscript
+
     git_cloner_3000 vinceliuice Tela-icon-theme -c
+
+    echo ""
+    echo "Installing Geometry change effect..."
+    # there is a makefile on the repo, can use that
+    git clone https://github.com/peterfajdiga/kwin4_effect_geometry_change.git
+    cd kwin4_effect_geometry_change/
+    make install
+    cd ../
+    rm -r kwin4_effect_geometry_change/
+
 
     echo ""
     echo "Installing Pixelify Sans (user-wide)..."
@@ -506,10 +517,20 @@ dotinstall() {
     echo "9. actually installing the dot files"
     echo ""
     imclose dry-run plasma color-schemes wallpapers konsole kwin start-bloom configs aurorae
+    # if the theme doesnt get applied on the session, force it
+    plasma-apply-lookandfeel -a "Blackberry Noisium"
+}
+
+newsoup() {
+    echo "10. change shell to fish"
+    echo ""
+    echo "depending on if sudo didnt timeout, you will be asked for your password"
+    # i didnt think this would be possible
+    chsh -s "$(command -v fish)" "$USER"
 }
 # i guess now we can call them
 # they are also at the bottom, so that its faster to remove a step for debugging
-# script_intro
+script_intro
 # this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
 # data_backup # step 1
 pkg_manager_check # step 2

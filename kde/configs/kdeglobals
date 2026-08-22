@@ -1,0 +1,14 @@
+[General]
+ColorSchemeHash=252cd6cb3940feaff52736d32b2f2a4f54059265
+LastUsedCustomAccentColor=61,174,233
+TerminalApplication=konsole
+TerminalService=Konsole.desktop
+UseSystemBell=true
+XftAntialias=true
+XftHintStyle=hintslight
+XftSubPixel=rgb
+fixed=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+font=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+menuFont=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+smallestReadableFont=Pixelify Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+toolBarFont=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
