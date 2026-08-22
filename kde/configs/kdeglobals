@@ -12,3 +12,12 @@ font=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
 menuFont=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
 smallestReadableFont=Pixelify Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
 toolBarFont=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+
+[KDE]
+AutomaticLookAndFeelOnIdle=false
+DefaultDarkLookAndFeel=Blackberry Noisium
+DefaultLightLookAndFeel=Strawberry Noisium
+LookAndFeelPackage=Blackberry Noisium
+ShowDeleteCommand=false
+contrast=4
+frameContrast=0
