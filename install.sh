@@ -12,7 +12,7 @@
 
 # NOT STARTED YET:
 # 9. finally i can test it
-# # problems: app launcher icon is not even there, theme seems to not be applied even after session restart, fonts are missing
+# # problems: app launcher icon is not even there, theme seems to not be applied even after session restart, fonts are missing, null still gets processed if battery ls command fails
 # 10. cleanup (if any)
 
 # solid intro
@@ -50,9 +50,11 @@ echo "- alright then, lets begin!"
 # backup user files and folders to another directory, incase something does goes wrong
 data_backup() {
     echo "1. Backing up user data (for extra mesure)..."
+    echo "The script will only back up ~/.config and ~/.local/share, as they are used for the installation"
+    echo "If you see this for a couple of minutes... i can fell your pain too"
     ""
-    cp -r $HOME/.config $HOME/.config-backup
-    cp -r $HOME/.local/share $HOME/.local/share-backup
+    cp -rp $HOME/.config $HOME/.config-backup
+    cp -rp $HOME/.local/share $HOME/.local/share-backup
 }
 
 # package check via package manager
@@ -277,16 +279,16 @@ curveball() {
 # widget install
 # the first 2 need compilation
 winget2 () {
-    # git_cloner_3000 luisbocanegra plasma-panel-colorizer
-    # git_cloner_3000 dhruv8sh kara
-    # git_cloner_3000 kevinbudz quickclock
-    # curveball pnedyalkov91/advanced-weather-widget
-    # curveball itsKhangQBit/BetterBatteryWidget
+    git_cloner_3000 luisbocanegra plasma-panel-colorizer
+    git_cloner_3000 dhruv8sh kara
+    git_cloner_3000 kevinbudz quickclock
+    curveball pnedyalkov91/advanced-weather-widget
+    curveball itsKhangQBit/BetterBatteryWidget
     # will make a bit of a small exception and delete this
-    # rm com.itsKhang.betterbatterywidget_p5.plasmoid
-    # curveball zeroxoneafour/polonium kwin
-    # curveball maurges/dynamic_workspaces kwin
-    # curveball maurges/dynamic_workspaces kwin git_fallback
+    rm com.itsKhang.betterbatterywidget_p5.plasmoid
+    curveball zeroxoneafour/polonium kwin
+    curveball maurges/dynamic_workspaces kwin
+    curveball maurges/dynamic_workspaces kwin git_fallback
     # im going to mostly wing the rest of them, as they are just edge case that dont necessarily need an entire function for it
 
     echo ""
@@ -297,7 +299,6 @@ winget2 () {
     cd ../
     cd ../
     rm -rf kde-control-station
-    exit
 
     echo ""
     echo "Installing dynamic_padding..."
@@ -380,8 +381,8 @@ batterycheck() {
         echo "Device has a battery. layout will change accordingly"
     else
         echo "Device doesnt have a battery. layout will change accordingly"
-        rm kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc-nobattery
-        mv kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc-nobattery kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc
+        rm ./kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc
+        mv ./kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc-nobattery kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc
     fi
 }
 
@@ -485,9 +486,12 @@ imclose() {
             _do cp -r "$backup/$item/" "${simple[$item]}/"
         elif [[ "$item" == start-bloom ]]; then
             local myflower="$HOME/.local/share/icons/hicolor/512x512/apps"
+            _do mkdir -p $myflower
             _do cp "$backup/Start Bloom.svg" "$myflower/"
         elif [[ "$item" == aurorae ]]; then
-            _do cp -rn "$backup/aurorae-themes"/*/ "$HOME/.local/share/aurorae/themes/"
+            local mynoise="$HOME/.local/share/aurorae/themes/"
+            _do mkdir "$mynoise"
+            _do cp -rn "$backup/aurorae-themes"/*/ "$mynoise"
         elif [[ "$item" == kwin ]]; then
             _do merge_ini "$backup/kwinrc" "$HOME/.config/kwinrc"
         elif [[ "$item" == configs ]]; then
