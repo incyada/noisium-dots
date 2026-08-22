@@ -149,7 +149,7 @@ packages_installation() {
     elif [ "${pkg_manager}" = "rtfm" ]; then
         # arch is much simpler though, as coprs dont have to be added beforehand
         # as an arch user myself (well artix, to be exact), these flags just means that the package will be install if its not there and will not ask for confirmation, usually
-        local install="sudo $aur_helper -S"
+        local install="$aur_helper -S"
         local flags="--needed --noconfirm"
         package() {
             echo "Installing $1..."
@@ -162,8 +162,8 @@ packages_installation() {
         package kwin-effects-better-blur-dx
         # something interesting about aur helpers, atleast when it comes to paru, if i remember, is that it checks the main repositories first before resorting to the aur
         # this means the install variable can be reused, and it still works
-        package konsole
-        package fish
+        sudo package konsole
+        sudo package fish
     else
         # THIS HAS NOT BEEN TESTED YET
         local install="sudo apt install -y"
