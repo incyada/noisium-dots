@@ -12,7 +12,7 @@
 
 # NOT STARTED YET:
 # 9. finally i can test it
-# # problems: kde control station doesnt get installed, app launcher icon is not even there, theme seems to not be applied even after session restart
+# # problems: app launcher icon is not even there, theme seems to not be applied even after session restart, fonts are missing
 # 10. cleanup (if any)
 
 # solid intro
@@ -222,7 +222,7 @@ dependers() {
     echo "Installing dependencies first..."
     echo "the list is long, so ill spare you the details"
     if [ "$pkg_manager" = "redhatslop" ]; then
-        sudo dnf install -y git curl gcc-c++ cmake extra-cmake-modules libplasma-devel kf6-kcoreaddons-devel spectacle python3 python3-dbus python3-gobject gettext g++ qt6-qtbase-dev qt6-qtdeclarative-devel kf6-ki18n-devel kf6-kservice-devel kf6-kwindowsystem-devel libplasma-devel plasma-activities-devel kwin-devel wayland-devel libepoxy-devel libdrm-devel plasma-workspace-devel kf6-kitemmodels-devel
+        sudo dnf install -y git curl gcc-c++ cmake extra-cmake-modules libplasma-devel kf6-kcoreaddons-devel spectacle python3 python3-dbus python3-gobject gettext g++ qt6-qtdeclarative-devel kf6-ki18n-devel kf6-kservice-devel kf6-kwindowsystem-devel libplasma-devel plasma-activities-devel kwin-devel wayland-devel libepoxy-devel libdrm-devel plasma-workspace-devel kf6-kitemmodels-devel
     elif [ "$pkg_manager" = "rtfm" ]; then
         sudo pacman -S git curl gcc cmake extra-cmake-modules libplasma spectacle python python-dbus python-gobject gettext base-devel qt6-base qt6-declarative kwin plasma-activities plasma-workspace --needed --noconfirm
     else
@@ -268,7 +268,7 @@ curveball() {
         local freemovies=$(curl -s https://api.github.com/repos/$1/releases/latest | grep '"browser_download_url":' | grep .$mp3player | grep -o 'https://[^"]*')
         # then it runs it
         # first, widget is renamed so that this is reusable
-        curl -o extension -L -O ${freemovies}
+        curl -o extension -LO ${freemovies}
         # now we install it, then remove it
         $extension_install
         rm extension
@@ -288,23 +288,37 @@ winget2 () {
     # curveball maurges/dynamic_workspaces kwin
     # curveball maurges/dynamic_workspaces kwin git_fallback
     # im going to mostly wing the rest of them, as they are just edge case that dont necessarily need an entire function for it
-    # echo ""
-    # echo "Installing dynamic_padding..."
-    # kpackagetool6 -t KWin/Script --install kde/dynamic_padding.kwinscript
-    # git_cloner_3000 vinceliuice Tela-icon-theme -c
-    # echo ""
-    # echo "Installing Pixelify Sans (user-wide)..."
-    # git clone https://github.com/eifetx/Pixelify-Sans.git
-    # cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/p/fonts/PixelifySans.ttf
+
+    echo ""
+    echo "Installing KDE Control Station..."
+    git clone https://github.com/EliverLara/kde-control-station.git
+    cd kde-control-station/package
+    kpackagetool6 -t Plasma/Applet --install .
+    cd ../
+    cd ../
+    rm -rf kde-control-station
+    exit
+
+    echo ""
+    echo "Installing dynamic_padding..."
+    kpackagetool6 -t KWin/Script --install kde/dynamic_padding.kwinscript
+    git_cloner_3000 vinceliuice Tela-icon-theme -c
+
+    echo ""
+    echo "Installing Pixelify Sans (user-wide)..."
+    git clone https://github.com/eifetx/Pixelify-Sans.git
+    cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/p/fonts/PixelifySans.ttf
     rm -rf Pixelify-Sans
+
     echo ""
     echo "Installing Monocraft (user-wide)..."
     # mini curveball
     local freegamesdotcom=$(curl -s https://api.github.com/repos/IdreesInc/Monocraft/releases/latest | grep '"browser_download_url":' | grep Monocraft-nerd-fonts-patched.ttc | grep -o 'https://[^"]*')
-    curl -L -O ${freegamesdotcom}
+    curl -LO ${freegamesdotcom}
     # now we install it, then remove it
     cp Monocraft-nerd-fonts-patched.ttc $HOME/.local/share/fonts/p/Monocraft.ttc
     rm Monocraft-nerd-fonts-patched.ttc
+
     echo ""
     echo "Installing Starship (fish prompt theming)..."
     curl -sS https://starship.rs/install.sh | sh
@@ -313,7 +327,7 @@ winget2 () {
 curvysphere() {
     echo "6. installing non-package files through curl and git"
     echo ""
-    # dependers
+    dependers
     winget2
 }
 
@@ -364,10 +378,10 @@ batterycheck() {
     # checks exit code of file
     if [ $? -eq 0 ]; then
         echo "Device has a battery. layout will change accordingly"
-        batstatus=1
     else
         echo "Device doesnt have a battery. layout will change accordingly"
-        batstatus=2
+        rm kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc-nobattery
+        mv kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc-nobattery kde-backup/configs/plasma-org.kde.plasma.desktop-appletsrc
     fi
 }
 
@@ -391,7 +405,6 @@ imclose() {
         [color-schemes]="$data/color-schemes"
         [wallpapers]="$data/wallpapers"
         [konsole]="$data/konsole"
-        [configs]="$HOME/.config"
     )
 
     # run dry run if declared
@@ -407,38 +420,56 @@ imclose() {
     # this is needed for kwinrc, as to respect user defaults
     # what it does, is look through each entry, and only overriding any entries from the dotfiles, rather than the whole thing
     merge_ini() {
-        local src="$1"
-        local dest="$2"
+        local src="$1" dest="$2"
         mkdir -p "$(dirname "$dest")"
         touch "$dest"
         awk -v src="$src" '
+        function flush_leftover(sec,    combined, parts) {
+            for (combined in srcval) {
+                split(combined, parts, SUBSEP)
+                if (parts[1] == sec && !((sec, parts[2]) in done)) {
+                    print parts[2] "=" srcval[sec, parts[2]]
+                    done[sec, parts[2]] = 1
+                }
+            }
+        }
         BEGIN {
             sec = ""
             while ((getline line < src) > 0) {
-                if (line ~ /^\[.*\]$/) { sec = line; continue }
-                srclines[sec] = srclines[sec] line "\n"
+                if (line ~ /^\[.*\]$/) {
+                    sec = line
+                    if (!(sec in secSeen)) { secSeen[sec]=1; secOrder[++nsec]=sec }
+                    continue
+                }
+                if (line !~ /^[;#]/ && (p = index(line, "=")) > 0)
+                    srcval[sec, substr(line,1,p-1)] = substr(line,p+1)
             }
             close(src)
+            cursec = ""
         }
         /^\[.*\]$/ {
+            flush_leftover(cursec)
             cursec = $0
-            if (cursec in srclines) {
-                print cursec
-                printf "%s", srclines[cursec]
-                used[cursec] = 1
-                skip = 1
-            } else {
-                skip = 0
-                print
-            }
+            destSeen[cursec] = 1
+            print
             next
         }
-        { if (!skip) print }
+        !/^[;#]/ && (p = index($0, "=")) > 0 {
+            key = substr($0, 1, p-1)
+            if ((cursec, key) in srcval) {
+                print key "=" srcval[cursec, key]
+                done[cursec, key] = 1
+            } else print
+            next
+        }
+        { print }
         END {
-            for (s in srclines) {
-                if (s != "" && !(s in used)) {
+            flush_leftover(cursec)
+            for (i=1; i<=nsec; i++) {
+                s = secOrder[i]
+                if (!(s in destSeen)) {
                     print s
-                    printf "%s", srclines[s]
+                    flush_leftover(s)
                 }
             }
         }
@@ -451,16 +482,17 @@ imclose() {
     for item in "$@"; do
         if [[ -n "${simple[$item]}" ]]; then
             _do mkdir -p "${simple[$item]}"
-            _do cp -r "$backup/$item/." "${simple[$item]}/"
+            _do cp -r "$backup/$item/" "${simple[$item]}/"
         elif [[ "$item" == start-bloom ]]; then
-            local myflower="$HOME/.local/share/icons/hicolor/512x512/app"
-            _do mkdir -p "$myflower"
+            local myflower="$HOME/.local/share/icons/hicolor/512x512/apps"
             _do cp "$backup/Start Bloom.svg" "$myflower/"
         elif [[ "$item" == aurorae ]]; then
-            _do mkdir -p "$HOME/.local/share/aurorae/themes"
             _do cp -rn "$backup/aurorae-themes"/*/ "$HOME/.local/share/aurorae/themes/"
         elif [[ "$item" == kwin ]]; then
             _do merge_ini "$backup/kwinrc" "$HOME/.config/kwinrc"
+        elif [[ "$item" == configs ]]; then
+            _do mkdir -p "$HOME/.config"
+            _do cp -r "$backup/configs/." "$HOME/.config/"
         else
             echo "Unknown item: $item" >&2
         fi
