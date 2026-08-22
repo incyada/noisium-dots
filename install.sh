@@ -45,8 +45,6 @@ script_intro() {
     read -p "The next time you press enter, the script will create a backup of the most important files, and start installing itself. To accept and start, press enter: " enter
 }
 
-echo ""
-echo "- alright then, lets begin!"
 # backup user files and folders to another directory, incase something does goes wrong
 data_backup() {
     echo "1. Backing up user data (for extra mesure)..."
@@ -311,7 +309,7 @@ winget2 () {
     cd kwin4_effect_geometry_change/
     make install
     cd ../
-    rm -r kwin4_effect_geometry_change/
+    rm -rf kwin4_effect_geometry_change/
 
 
     echo ""
@@ -516,6 +514,7 @@ imclose() {
 dotinstall() {
     echo "9. actually installing the dot files"
     echo ""
+    # if you specify dry-run here, it wont actually override your dotfiles before the script was ran
     imclose dry-run plasma color-schemes wallpapers konsole kwin start-bloom configs aurorae
     # if the theme doesnt get applied on the session, force it
     plasma-apply-lookandfeel -a "Blackberry Noisium"
@@ -531,6 +530,9 @@ newsoup() {
 # i guess now we can call them
 # they are also at the bottom, so that its faster to remove a step for debugging
 script_intro
+
+echo ""
+echo "- alright then, lets begin!"
 # this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
 # data_backup # step 1
 pkg_manager_check # step 2
