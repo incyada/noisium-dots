@@ -52,7 +52,6 @@ data_backup() {
     echo "1. Backing up user data (for extra mesure)..."
     echo "The script will only back up ~/.config and ~/.local/share, as they are used for the installation"
     echo "If you see this for a couple of minutes... i can fell your pain too"
-    ""
     cp -rp $HOME/.config $HOME/.config-backup
     cp -rp $HOME/.local/share $HOME/.local/share-backup
 }
@@ -76,7 +75,7 @@ pkg_manager_check() {
         pkg_manager="redhatslop"
     # on arch, will have to check if yay or paru is installed rather than pacman... will have to install some AUR packages
     # there is acleaner way of doing this check, without another if statement, but i havent unlocked that yet
-    elif command -v paru yay > /dev/null 2>&1; then
+    elif command -v yay paru > /dev/null 2>&1; then
         # saving the aur helper that will be used
         if command -v paru > /dev/null 2>&1; then
             aur_helper=paru
@@ -287,7 +286,6 @@ winget2 () {
     # will make a bit of a small exception and delete this
     rm com.itsKhang.betterbatterywidget_p5.plasmoid
     curveball zeroxoneafour/polonium kwin
-    curveball maurges/dynamic_workspaces kwin
     curveball maurges/dynamic_workspaces kwin git_fallback
     # im going to mostly wing the rest of them, as they are just edge case that dont necessarily need an entire function for it
 
@@ -308,7 +306,8 @@ winget2 () {
     echo ""
     echo "Installing Pixelify Sans (user-wide)..."
     git clone https://github.com/eifetx/Pixelify-Sans.git
-    cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/p/fonts/PixelifySans.ttf
+    mkdir -p $HOME/.local/share/fonts/p
+    cp ./Pixelify-Sans/fonts/variable/PixelifySans[wght].ttf $HOME/.local/share/fonts/p/PixelifySans.ttf
     rm -rf Pixelify-Sans
 
     echo ""
@@ -352,6 +351,7 @@ yourname() {
     # make a temporary backup for good measure
     # will be worked on
     cp -r ./kde ./kde-backup
+    local lines=()
     local deletemii=""
     # im using a backup, since i want to avoid destroying my only backup for this script, for now
     local miikiller=$(grep -rl incyada kde-backup/*)
@@ -361,7 +361,7 @@ yourname() {
     #local lines=() # this cant be an enmpty line, cause otherwise, an issue where that same line for some reason, gets processed, would pop up
     while IFS= read -r line; do
         lines+=("$line")
-    done < <(printf "$deletemii")
+    done < <(printf '%s' "$deletemii")
 
     # now for each entry in there, replaace any instance of my name, with who is running it
     for entry in "${lines[@]}"; do
@@ -375,7 +375,7 @@ batterycheck() {
     echo "8. check if the device running the script isnt plugged 24/7"
     echo ""
     # null is nothing, who would have guessed
-    ls /sys/class/power_supply/BAT* > /dev/null
+    ls /sys/class/power_supply/BAT* >/dev/null 2>/dev/null
     # checks exit code of file
     if [ $? -eq 0 ]; then
         echo "Device has a battery. layout will change accordingly"
@@ -483,14 +483,13 @@ imclose() {
     for item in "$@"; do
         if [[ -n "${simple[$item]}" ]]; then
             _do mkdir -p "${simple[$item]}"
-            _do cp -r "$backup/$item/" "${simple[$item]}/"
+            _do cp -r "$backup/$item/." "${simple[$item]}/"
         elif [[ "$item" == start-bloom ]]; then
             local myflower="$HOME/.local/share/icons/hicolor/512x512/apps"
             _do mkdir -p $myflower
             _do cp "$backup/Start Bloom.svg" "$myflower/"
         elif [[ "$item" == aurorae ]]; then
             local mynoise="$HOME/.local/share/aurorae/themes/"
-            _do mkdir "$mynoise"
             _do cp -rn "$backup/aurorae-themes"/*/ "$mynoise"
         elif [[ "$item" == kwin ]]; then
             _do merge_ini "$backup/kwinrc" "$HOME/.config/kwinrc"
@@ -513,11 +512,11 @@ dotinstall() {
 # script_intro
 # this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
 # data_backup # step 1
-# pkg_manager_check # step 2
-# repo_update_time # step 3
-# packages_installation # step 4
-# missinformation # step 5
-# curvysphere # step 6
-# yourname # step 7
-# batterycheck # step 8
+pkg_manager_check # step 2
+repo_update_time # step 3
+packages_installation # step 4
+missinformation # step 5
+curvysphere # step 6
+yourname # step 7
+batterycheck # step 8
 dotinstall # step 9
