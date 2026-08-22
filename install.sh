@@ -343,7 +343,7 @@ curvysphere() {
 # finally, another function: creating needed folders
 # this step is quick, so its unnecessary to report the step to the terminal
 fold() {
-    mkdir $HOME/.local/share/$1
+    mkdir -p $HOME/.local/share/$1
 }
 
 missinformation() {
@@ -499,7 +499,7 @@ imclose() {
             _do cp "$backup/Start Bloom.svg" "$myflower/"
         elif [[ "$item" == aurorae ]]; then
             local mynoise="$HOME/.local/share/aurorae/themes/"
-            _do cp -rn "$backup/aurorae-themes"/*/ "$mynoise"
+            _do cp -rn "$backup/aurorae-themes/." "$mynoise"
         elif [[ "$item" == kwin ]]; then
             _do merge_ini "$backup/kwinrc" "$HOME/.config/kwinrc"
         elif [[ "$item" == configs ]]; then
