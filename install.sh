@@ -514,8 +514,8 @@ imclose() {
 dotinstall() {
     echo "9. actually installing the dot files"
     echo ""
-    # if you specify dry-run here, it wont actually override your dotfiles before the script was ran
-    imclose dry-run plasma color-schemes wallpapers konsole kwin start-bloom configs aurorae
+    # if you specify dry-run before everything else, it wont actually override your dotfiles before the script was ran
+    imclose plasma color-schemes wallpapers konsole kwin start-bloom configs aurorae
     # if the theme doesnt get applied on the session, force it
     plasma-apply-lookandfeel -a "Blackberry Noisium"
 }
@@ -543,3 +543,4 @@ curvysphere # step 6
 yourname # step 7
 batterycheck # step 8
 dotinstall # step 9
+newsoup # step 10
