@@ -60,13 +60,10 @@ pkg_manager_check() {
     # there is acleaner way of doing this check, without another if statement, but i havent unlocked that yet
     elif command -v yay paru > /dev/null 2>&1; then
         # saving the aur helper that will be used
-        if command -v paru > /dev/null 2>&1; then
-            aur_helper=paru
-        else
-            aur_helper=yay
-        fi
+        # basically "&&" is only ran if a command suceeds
+        aur_helper=$(command -v paru >/dev/null 2>&1 && echo paru || echo yay)
         echo "DISTRO BASE FOUND: ARCH"
-        echo "Using pacman as the package manager..."
+        echo "Using pacman and the installed AUR helper as the package manager..."
         echo "AUR Helper: $aur_helper"
         pkg_manager="rtfm"
     elif command -v pacman > /dev/null 2>&1; then
@@ -104,8 +101,6 @@ repo_update_time() {
 }
 
 # installing system packages
-# i have an idea, and its just to turn all of these entries into functions, rather than hardcoded commands
-# ill reserve this at the end of the script, also 117 line difference, jesus...
 packages_installation() {
     echo "4. Installing needed system packages"
     echo ""
@@ -149,12 +144,12 @@ packages_installation() {
         package darkly-bin
         package kwin-effect-rounded-corners
         package kwin-effects-better-blur-dx
-        # something interesting about aur helpers, atleast when it comes to paru, if i remember, is that it checks the main repositories first before resorting to the aur
-        # this means the install variable can be reused, and it still works
+        # something interesting about aur helpers, atleast when it comes to paru, is that it checks the main installed repositories first before resorting to the aur
+        # this means the install variable can be reused, and it still works, including with the chaotic aur (if an aur helper is installed for some reason)
         sudo package konsole
         sudo package fish
     else
-        # THIS HAS NOT BEEN TESTED YET
+        # debian/ubuntu based installation looks weird, because i dont have ppas and darkly is the only one that is a package, so for the rest, its manual compilation time
         local install="sudo apt install -y"
         echo "Installing Darkly..."
         echo "curling first..."
@@ -352,23 +347,12 @@ yourname() {
     # make a temporary backup for good measure
     # will be worked on
     cp -r ./kde ./kde-backup
-    local lines=()
-    local deletemii=""
-    # im using a backup, since i want to avoid destroying my only backup for this script, for now
-    local miikiller=$(grep -rl incyada kde-backup/*)
-    local deletemii+="$miikiller"
-    #echo "$deletemii"
-    # im gonna need to spilt each file cleanly, so this small loop should do it
-    #local lines=() # this cant be an enmpty line, cause otherwise, an issue where that same line for some reason, gets processed, would pop up
-    while IFS= read -r line; do
-        lines+=("$line")
-    done < <(printf '%s' "$deletemii")
-
-    # now for each entry in there, replaace any instance of my name, with who is running it
-    for entry in "${lines[@]}"; do
-        grep -r incyada "./$entry" | sed -i "s/incyada/$USER/g" "$entry"
-        echo "Overriden $entry"
-    done
+    local file=()
+    # im gonna need to spilt each file cleanly, so this small loop should do it while replacing any instance of my name, with who is running the script
+    while IFS= read -r file; do
+        sed -i "s/incyada/$USER/g" "$file"
+        echo "Overriden $file"
+    done < <(grep -rl incyada kde-backup/* 2>/dev/null)
 }
 
 # most people have desktops, but i have a laptop, and since the battery widget is placed there for my usecase, ill have to detect whether or not someone has a battery on their laptop, and if its necessary to use the battery-less variant for this script
@@ -376,9 +360,8 @@ batterycheck() {
     echo "8. check if the device running the script isnt plugged 24/7"
     echo ""
     # null is nothing, who would have guessed
-    ls /sys/class/power_supply/BAT* >/dev/null 2>/dev/null
-    # checks exit code of file
-    if [ $? -eq 0 ]; then
+    # checks exit code of the command while running it
+    if ls /sys/class/power_supply/BAT* >/dev/null 2>/dev/null; then
         echo "Device has a battery. layout will change accordingly"
     else
         echo "Device doesnt have a battery. layout will change accordingly"
@@ -534,11 +517,13 @@ script_outro() {
     echo "- App data: ~/.local/share, backed up to ~/.local/share-backup"
     echo "2. Log out to apply everything for the dotfiles, trust me, you should do this"
     echo "3. Check out the Polonium keybinds to change them, or familiarize with them. You can see the shortcuts on System Settings > Keyboard > Shortcuts > Window Management > Any keybind that starts with "Polonium:""
+    echo "4. If you want a more WM-like feel, why not try the title-less variant of the theme's window decoration (yes, i made one)? You would find it ion the System Settings > Color and Themes > Window decorations"
+    echo "5. Try out any wallpapers that you will like, rather than the default included in this theme. I made 5, 4 of which are Minecraft screenshots for different seasons."
+    echo "6. Apply the Silent SDDM config for a more consistent look for the lookscreen. The files are in the silent-sddm folder, and you should be able to override the "silent" SDDM theme files (if they are there) with whats in there."
     echo "Remember: You can always return to before the script was ran via the backups if you want to return to your setup."
     echo ""
     echo "With all of that being said and done, there is nothing else for me, and i hope you enjoy the Noisium Dots!"
     read -p "Press enter to end: " enter
-    exit 1
 }
 # i guess now we can call them
 # they are also at the bottom, so that its faster to remove a step for debugging
