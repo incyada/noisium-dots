@@ -524,7 +524,9 @@ newsoup() {
 # now i can have an outro
 # been one of the longest couple of days
 script_outro() {
-    # not sure if multiple lines will slow things down for systems that are pretty slow
+    # you are not needed anymore
+    rm -rf kde-backup
+    echo ""
     echo "* * The dotfiles has been installed! * *"
     echo "Now that its done, some things last:"
     echo "1. make sure that anything that you consider important has been correctly backed up before the script installed the dotfiles potentionally destructive. they are on the following paths:"
