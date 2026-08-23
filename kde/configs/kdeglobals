@@ -21,3 +21,12 @@ LookAndFeelPackage=Blackberry Noisium
 ShowDeleteCommand=false
 contrast=4
 frameContrast=0
+
+[WM]
+activeBackground=227,229,231
+activeBlend=227,229,231
+activeFont=Pixelify Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+activeForeground=35,38,41
+inactiveBackground=239,240,241
+inactiveBlend=239,240,241
+inactiveForeground=112,125,138

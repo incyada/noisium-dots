@@ -12,7 +12,7 @@
 
 # NOT STARTED YET:
 # 9. finally i can test it
-# # problems: app launcher icon is not even there, theme seems to not be applied even after session restart, fonts are missing, null still gets processed if battery ls command fails
+# # problems: install script seems to brick cachyos and pikaos, might have to reinstall the script to make sure that nothing is... well, wrong that could be causing this.
 # 10. cleanup (if any)
 
 # solid intro
@@ -30,7 +30,7 @@ script_intro() {
     echo "* * NOISIUM DOTS TUI INSTALLER * *"
     echo "Welcome to the Noisium dots TUI installer!"
     echo "This script will handle the manually parts of installing the noisium dots for you, so that all you have to do is sit back, relax, and enjoy the commands!"
-    echo "Really quickly though: This script will not work if the distro of your choosing is based on, or are the following:"
+    echo "Really quickly though: This script will not work if the distro of your choosing is not based on, or aren't the following:"
     echo "- Debian/Ubuntu"
     echo "- Fedora (but not based on Fedora Atomic/Silverblue)"
     echo "- Arch Linux (but not SteamOS)"
@@ -88,9 +88,13 @@ pkg_manager_check() {
         echo "DISTRO BASE FOUND: ARCH"
         echo "...But not AUR wrapper was found..."
         echo "Please install either yay, or paru first before running this script, as some AUR packages will have to be installed."
+        echo "If you are on Cachyos, or have the Cachyos repositories, you can install yay, or paru like you would with any other package."
+        echo "If they arent there, here are the direct links to the main AUR wrappers:"
+        echo "Paru: https://github.com/Morganamilo/paru#installation"
+        echo "Yay: https://github.com/Jguer/yay#source"
         exit 1
     else
-        echo "Odd... maybe the package manager isnt on the ones listed, or somehow doesnt exist... try checking if its there first before rerunning."
+        echo "Odd... maybe the package manager isnt on the ones listed, or somehow doesnt exist... try checking if apt, dnf, or pacman is there first before rerunning."
         exit 1
     fi
 }
@@ -534,7 +538,7 @@ script_intro
 echo ""
 echo "- alright then, lets begin!"
 # this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
-# data_backup # step 1
+data_backup # step 1
 pkg_manager_check # step 2
 repo_update_time # step 3
 packages_installation # step 4
