@@ -179,6 +179,7 @@ packages_installation() {
         echo "now we install with this command: $install ./package.deb # package.deb is supposed to be darkly, but renamed incase any versions were to be added"
         # using willcard to always install deb file no matter what the name is
         $install ./*.deb
+        rm -f ./*.deb
         echo ""
         echo "Hold on, ill need some dependencies first..."
         echo "command executed: sudo apt install -y [a lot of packages that are harmless]"
@@ -203,7 +204,9 @@ packages_installation() {
         cmake --build . -j
         sudo make install
         cd ../
-        rm -rf KDE-Rounded-Corners
+        cd ../
+        # some files are write protected, so sudo will be used here to properly delete it
+        sudo rm -rf KDE-Rounded-Corners
 
         echo ""
         echo "Installing konsole..."
