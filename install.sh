@@ -1,19 +1,4 @@
 #!/bin/bash
-# things to do:
-# DONE:
-# 1. backup all replaced files
-# 2. update repos and check which package manager is on the system (paru, yay, dnf, or apt)
-# 3. auto-check needed packages first, then install them
-# 4. install extensions needed (do want to support the projects at hand, although, im not sure how easy it will be)
-# 5. auto-create any folders that arent there for the installation
-# 6. replace instances of my name (incyada) to $USER
-# 7. check if the device has battery, why? cause not everyone has a laptop (use ls /sys/class/power_supply/BAT* and see if it doesnt error out)
-# 8. lots of manual copy-pasting
-
-# NOT STARTED YET:
-# 9. finally i can test it
-# # problems: install script seems to brick cachyos and pikaos, might have to reinstall the script to make sure that nothing is... well, wrong that could be causing this.
-# 10. cleanup (if any)
 
 # solid intro
 # made this a function for simplicity sake
@@ -527,6 +512,7 @@ dotinstall() {
     plasma-apply-lookandfeel -a "Blackberry Noisium"
 }
 
+# last thing before sendoff, changing the shell
 newsoup() {
     echo "10. change shell to fish"
     echo ""
@@ -534,13 +520,31 @@ newsoup() {
     # i didnt think this would be possible
     chsh -s "$(command -v fish)" "$USER"
 }
+
+# now i can have an outro
+# been one of the longest couple of days
+script_outro() {
+    # not sure if multiple lines will slow things down for systems that are pretty slow
+    echo "* * The dotfiles has been installed! * *"
+    echo "Now that its done, some things last:"
+    echo "1. make sure that anything that you consider important has been correctly backed up before the script installed the dotfiles potentionally destructive. they are on the following paths:"
+    echo "- Configs: ~/.config, backed up to ~/.config-backup"
+    echo "- App data: ~/.local/share, backed up to ~/.local/share-backup"
+    echo "2. Log out to apply everything for the dotfiles, trust me, you should do this"
+    echo "3. Check out the Polonium keybinds to change them, or familiarize with them. You can see the shortcuts on System Settings > Keyboard > Shortcuts > Window Management > Any keybind that starts with "Polonium:""
+    echo "Remember: You can always return to before the script was ran via the backups if you want to return to your setup."
+    echo ""
+    echo "With all of that being said and done, there is nothing else for me, and i hope you enjoy the Noisium Dots!"
+    read -p "Press enter to end: " enter
+    exit 1
+}
 # i guess now we can call them
 # they are also at the bottom, so that its faster to remove a step for debugging
 script_intro
 
 echo ""
 echo "- alright then, lets begin!"
-# this one is disabled, as on my system, it would have to copy OVER 100GBs of content, so this makes developing the script faster, for now anyway
+
 data_backup # step 1
 pkg_manager_check # step 2
 repo_update_time # step 3
@@ -551,3 +555,4 @@ yourname # step 7
 batterycheck # step 8
 dotinstall # step 9
 newsoup # step 10
+script_outro

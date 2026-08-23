@@ -4,7 +4,7 @@
 <p align=center>
   * * Dots for the cakes * *
 </p>
-
+i dont know if this will work, but its worth a shot: curl -fsSL https://raw.githubusercontent.com/incyada/noisium-dots/main/install.sh | bash
 ## About
 Noisium aims to be dotfiles and a pink, and colourful theme that balances both looks and functionality. <br>
 My goal is to create something that looks modern, while not fully hindering usability.<br>
