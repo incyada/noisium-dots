@@ -1,0 +1,116 @@
+format = """
+[█](#372835)\
+$username\
+[🭬](bg:#4b3648 fg:#372835)\
+$directory\
+[🭬](fg:#4b3648 bg:#a56b9d)\
+$git_branch\
+$git_status\
+[🭬](fg:#a56b9d bg:#ffadf2)\
+$c\
+$elixir\
+$elm\
+$golang\
+$haskell\
+$java\
+$julia\
+$nodejs\
+$nim\
+$rust\
+[🭬](fg:#ffadf2 bg:#ffffff)\
+$docker_context\
+[🭬](fg:#ffffff)\
+"""
+
+# Disable the blank line at the start of the prompt
+# add_newline = false
+
+# You can also replace your username with a neat symbol like  to save some space
+[username]
+show_always = true
+style_user = "bg:#372835 fg:#FFFFFF"
+style_root = "bg:#372835 fg:#FFFFFF"
+format = '[ ]($style)'
+
+[directory]
+style = "bg:#4b3648 fg:#FFFFFF"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = "  "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important  " = "  "
+
+[c]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[docker_context]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol $context ](bg:#ffadf2 fg:#FFFFFF)]($style) $path'
+
+[elixir]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[elm]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[git_branch]
+symbol = ""
+style = "bg:#a56b9d fg:#FFFFFF"
+format = '[[ $symbol $branch ](bg:#a56b9d fg:#FFFFFF)]($style)'
+
+[git_status]
+style = "bg:#a56b9d fg:#FFFFFF"
+format = '[[($all_status$ahead_behind )](bg:#a56b9d fg:#FFFFFF)]($style)'
+
+[golang]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[java]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[julia]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[nim]
+symbol = " "
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#ffadf2 fg:#FFFFFF"
+format = '[[ $symbol ($version) ](bg:#ffadf2 fg:#FFFFFF)]($style)'
