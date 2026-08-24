@@ -128,6 +128,7 @@ packages_installation() {
         package deltacopy/darkly darkly
         package matinlotfali/KDE-Rounded-Corners kwin-effect-roundcorners
         package infinality/kwin-effects-better-blur-dx kwin-effects-better-blur-dx
+        package atim/starship starship
         package konsole
         package fish
     elif [ "${pkg_manager}" = "rtfm" ]; then
@@ -146,6 +147,7 @@ packages_installation() {
         package kwin-effects-better-blur-dx
         # something interesting about aur helpers, atleast when it comes to paru, is that it checks the main installed repositories first before resorting to the aur
         # this means the install variable can be reused, and it still works, including with the chaotic aur (if an aur helper is installed for some reason)
+        package starship
         sudo package konsole
         sudo package fish
     else
@@ -187,6 +189,11 @@ packages_installation() {
         cd ../
         # some files are write protected, so sudo will be used here to properly delete it
         sudo rm -rf KDE-Rounded-Corners
+
+        echo ""
+        echo "Installing starship..."
+        echo "command executed: $install starship"
+        $install starship
 
         echo ""
         echo "Installing konsole..."
@@ -314,10 +321,6 @@ winget2 () {
     # now we install it, then remove it
     cp Monocraft-nerd-fonts-patched.ttc $HOME/.local/share/fonts/p/Monocraft.ttc
     rm Monocraft-nerd-fonts-patched.ttc
-
-    echo ""
-    echo "Installing Starship (fish prompt theming)..."
-    curl -sS https://starship.rs/install.sh | sh
 }
 # massive sidequest aside, here is the cleaner, final function
 curvysphere() {
