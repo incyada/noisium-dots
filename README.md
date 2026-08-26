@@ -16,14 +16,14 @@ Starring is fine, if you dont want or have the physical means to support me.
 
 ## About
 Noisium aims to be dotfiles and a pink, and colourful theme that balances both looks and functionality. <br>
-My goal is to create something that looks modern, while not fully hindering usability.<br>
+My goal is to create something that looks modern, comes in two distinc palettes (Strawberry for light, Blackberry for dark), while not fully hindering usability.<br>
 The theme also aims to provided a different palette whether you're an early bird, or night owl, so everyone can pick their poison!
 
 ## Why make this?
 Most themes you see online, most notably on r/unixporn (its not what you think), usually fall below a sort of spectrum:
 - KDE or GNOME rices that has a dock at the bottom and a panel at the top, feels too MacOS-like for me.
 - WM theme that only looks good, and nothing more.
-- Rarely, KDE/GNOME rices that has a windows-like, layout.
+- Sometimes, KDE/GNOME rices that has a windows-like, layout.
 - And sometimes, do you get a unique layout.
 
 There is no shame in posting or using these themes, and I don't mind them either. Just that for me, one of my goals that i set once i switched to linux, is to have a setup that has a different visual identity that the main 2 desktop operating systems (it was just to regain privacy, but now its for better perfomance and workflow, with a side of tinkering from time to time).
