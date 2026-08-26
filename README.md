@@ -36,10 +36,13 @@ Depending on what I'll do on my Linux journey, this theme only covers my persona
 ## Auto Install script
 This dotfiles has an installation script, so for anyone who wants to try these without the manual effort, you can! <br>
 The script currently only supports Fedora (not atomic), Debian/Ubuntu, Arch Linux (not Steamos), and any of their derivative distros.
-If you want to install it right away without any of the usual conformations, run this in a terminal:
+If you want to install it right away run this in a terminal:
 ```
-curl -fsSL https://raw.githubusercontent.com/incyada/noisium-dots/main/install.sh | bash 
+git clone https://github.com/incyada/noisium-dots.git
+cd noisium-dots/
+./install.sh
 ```
+if you are willing to help add support for other distros, feel free to create a pull request!
 ## Theme details:
 These are the things that I used to make this theme possible. Not all of them can be easily installed thought.
 | Theme Asset | Original source |
