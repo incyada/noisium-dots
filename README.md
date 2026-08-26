@@ -5,10 +5,8 @@
   * * Dots for the cakes * *
 </p>
 
-<!--
-this is a note in markdown
-i want something here, like a showcase video
--->
+<!-- driving in my car, right after a beer-->
+https://github.com/user-attachments/assets/b76c8d4f-3486-497c-978c-22dd65a82b83
 
 ## Support my work
 <p style="text-align: center;">
