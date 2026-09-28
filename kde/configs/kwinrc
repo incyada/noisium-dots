@@ -2,8 +2,11 @@
 GLPreferBufferSwap=0
 
 [Effect-better-blur-dx]
+BlurCacheRateLimit=16
+BlurDecorations=true
 BlurStrength=4
-CornerRadius=15
+CornerRadius=16
+WindowClasses=class1\nclass2\nclass3\norg.kde.konsole\ngsr-ui
 
 [Effect-blur]
 BlurStrength=4
