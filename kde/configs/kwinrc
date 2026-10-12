@@ -6,6 +6,7 @@ BlurCacheRateLimit=16
 BlurDecorations=true
 BlurStrength=4
 CornerRadius=16
+Saturation=117
 WindowClasses=class1\nclass2\nclass3\norg.kde.konsole\ngsr-ui
 
 [Effect-blur]
